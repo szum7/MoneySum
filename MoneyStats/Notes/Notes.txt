@@ -1,0 +1,44 @@
+﻿
+- kérjük le az utolsó tranzakció dátumát ([ACCOUNTING_DATE]) és jelezzük mindig látható helyen (pl. headerben). Fontos adat, hogy mennyire naprakész az alkalmazás.
+
+
+-------------------------
+Possible file conversions
+-------------------------
+
+db -> .xls
+memory -> .xls
+.xls -> db
+.xls -> memory
+db -> memory
+
+
+More than one exported bank excel files:
+----------------------------------------
+export .xls from bank
+.xls -> memory (read the exported file(s))
+merge exported files in memory
+memory -> .xls (merged excel file)
+user works on excel file (additional columns, e.g.: tags)
+.xls -> memory (read merged file)
+db -> memory (load already excisting transactions)
+merge memory data
+memory -> db
+
+
+One exported bank excel file:
+-----------------------------
+user works on excel file (additional columns, e.g.: tags)
+.xls -> memory (read modified excel file)
+db -> memory (load already excisting transactions)
+merge memory data
+memory -> db
+
+
+
+db -x-> .xls => db -> memory -> .xls
+
+
+db -> memory
+.xls -> memory
+memory -> db

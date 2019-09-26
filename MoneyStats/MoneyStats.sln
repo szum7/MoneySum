@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes", "Notes\Notes.csproj", "{D54DEABE-9197-459D-B77F-6DF728DD68D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes", "Notes\Notes.csproj", "{D54DEABE-9197-459D-B77F-6DF728DD68D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyStatsWebApp", "MoneyStatsWebApp\MoneyStatsWebApp.csproj", "{B2495570-A972-4D2F-9EC7-23D9FF7E0885}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStatsWebApp", "MoneyStatsWebApp\MoneyStatsWebApp.csproj", "{B2495570-A972-4D2F-9EC7-23D9FF7E0885}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelWorker", "ExcelWorker\ExcelWorker.csproj", "{EC9DC244-765F-4931-9DD5-4DB9C0F10820}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelWorker", "ExcelWorker\ExcelWorker.csproj", "{EC9DC244-765F-4931-9DD5-4DB9C0F10820}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.DAL", "MoneyStats.DAL\MoneyStats.DAL.csproj", "{B7A532F7-E997-4E25-B9DE-DB138E3A400D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

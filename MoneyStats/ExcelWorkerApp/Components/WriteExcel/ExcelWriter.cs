@@ -101,7 +101,7 @@ namespace ExcelWorkerApp.Components.WriteExcel
                     {
                         row.CreateCell(10).SetCellValue("Is omitted?");
                         row.CreateCell(11).SetCellValue("Group id");
-                        row.CreateCell(12).SetCellValue("Tag ids");
+                        row.CreateCell(12).SetCellValue("Tag names");
                         row.CreateCell(13).SetCellValue("Tag group id");
                         return;
                     }

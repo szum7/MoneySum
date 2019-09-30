@@ -9,8 +9,13 @@ namespace ExcelWorkerApp
         static void Main(string[] args)
         {
             // Read many bank-exported excel files
+            ExcelReader<Transaction> reader = new ExcelReader<Transaction>();
+            ExcelSheet<Transaction> allFiles = reader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
 
             // Merge read files
+            reader.TruncateData();
+
+            // Write merged file to an excel file
 
             // => User edits the file
 
@@ -22,15 +27,7 @@ namespace ExcelWorkerApp
 
             // Write to db
 
-
-            var reader = new ExcelReader<TransactionExtended>();
-            var allFiles = reader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
-            //var mergedFile = reader.Read(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\merged.xls");
-            //var truncater = new TransactionTruncater<TransactionExtended>();
-            //truncater.Run(allFiles);
-            reader.TruncateData();
-
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("PROGRAM END");
         }
     }
 }

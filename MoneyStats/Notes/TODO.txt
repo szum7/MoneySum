@@ -1,1 +1,1 @@
-﻿
+﻿- ellenőrizni, miért 130 rekord lett 131-ből? (headerrel együtt 131?)

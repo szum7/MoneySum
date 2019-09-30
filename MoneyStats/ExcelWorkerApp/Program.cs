@@ -1,4 +1,5 @@
 ﻿using ExcelWorkerApp.Components.ReadExcel;
+using ExcelWorkerApp.Components.WriteExcel;
 using ExcelWorkerApp.Model;
 using System;
 
@@ -16,6 +17,8 @@ namespace ExcelWorkerApp
             reader.TruncateData();
 
             // Write merged file to an excel file
+            ExcelWriter excelWriter = new ExcelWriter();
+            excelWriter.Run(allFiles, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 
             // => User edits the file
 

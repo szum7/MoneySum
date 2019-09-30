@@ -47,7 +47,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                 documentRead++;
                 this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead > 1 ? "" : "s")} read.");
             }
-            this.watch.PrintDiff($"All documents read. DONE.");
+            this.watch.PrintDiff($"All documents read. DONE.\n");
             return this.sheet;
         }
 
@@ -108,7 +108,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     if (row.GetCell(4) != null) tr.AccountName =    row.GetCell(4).ToString();
                     if (row.GetCell(5) != null) tr.PartnerAccount = row.GetCell(5).ToString();
                     if (row.GetCell(6) != null) tr.PartnerName =    row.GetCell(6).ToString();
-                    if (row.GetCell(7) != null) tr.Sum =            decimal.Parse(row.GetCell(7).ToString());
+                    if (row.GetCell(7) != null) tr.Sum =            double.Parse(row.GetCell(7).ToString());
                     if (row.GetCell(8) != null) tr.Currency =       row.GetCell(8).ToString();
                     if (row.GetCell(9) != null) tr.Message =        row.GetCell(9).ToString();
 

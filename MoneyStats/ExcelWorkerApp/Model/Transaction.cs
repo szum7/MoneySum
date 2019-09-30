@@ -14,7 +14,7 @@ namespace ExcelWorkerApp.Model
         public string AccountName { get; set; }
         public string PartnerAccount { get; set; }
         public string PartnerName { get; set; }
-        public decimal Sum { get; set; }
+        public double Sum { get; set; }
         public string Currency { get; set; }
         public string Message { get; set; }
 

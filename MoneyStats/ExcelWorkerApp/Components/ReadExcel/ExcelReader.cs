@@ -11,46 +11,6 @@ using System.Text;
 
 namespace ExcelWorkerApp.Components.ReadExcel
 {
-    class ExcelSheet<T> where T : Transaction, new()
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<string> Header { get; set; }
-        public List<T> Transactions { get; set; }
-
-        public ExcelSheet()
-        {
-            this.Header = new List<string>();
-            this.Transactions = new List<T>();
-        }
-
-        public bool IsHeaderEmpty() => this.Header.Count == 0;
-
-        public void AddNewRow()
-        {
-            this.Transactions.Add(new T());
-        }
-
-        public void AddNewRow(T row)
-        {
-            this.Transactions.Add(row);
-        }
-
-        public void SetLastRow(T value)
-        {
-            if (this.Transactions.Count == 0)
-                return;
-            this.Transactions[this.Transactions.Count - 1] = value;
-        }
-
-        public T GetLastRow()
-        {
-            if (this.Transactions.Count == 0)
-                return null;
-            return this.Transactions[this.Transactions.Count - 1];
-        }
-    }
-
     /// <summary>
     /// Read file to memory
     /// </summary>
@@ -181,6 +141,12 @@ namespace ExcelWorkerApp.Components.ReadExcel
                 ret.Add(int.Parse(item));
             }
             return ret;
+        }
+
+        public void TruncateData()
+        {
+            int truncatedRowCount = this.sheet.Truncate();
+            this.watch.PrintDiff($"FINISHED. {truncatedRowCount} truncated rows, {this.sheet.Transactions.Count} remaining.");
         }
     }
 }

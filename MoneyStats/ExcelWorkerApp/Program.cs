@@ -14,15 +14,18 @@ namespace ExcelWorkerApp
             ExcelReader<Transaction> reader = new ExcelReader<Transaction>();
             ExcelSheet<Transaction> allFiles = reader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
 #endif
+
             // Merge read files
 #if true
             reader.TruncateData();
 #endif
+
             // Write merged file to an excel file
 #if true
             ExcelWriter excelWriter = new ExcelWriter();
             excelWriter.Run(allFiles, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
+
             // => User edits the file
 #if true
             Console.WriteLine("========================");
@@ -40,17 +43,22 @@ namespace ExcelWorkerApp
                 }
             }
 #endif
+
             // Read one merged excel file
 #if true
             var mergedFileReader = new ExcelReader<TransactionExtended>();
             mergedFileReader.IsReadFromTheBeginning = true;
             var mergedFile = mergedFileReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
+
             // Load already existing transactions from database
+
 
             // Merge db data and merged-excel file data
 
+
             // Write to db
+
 
             Console.WriteLine("PROGRAM ENDED.");
         }

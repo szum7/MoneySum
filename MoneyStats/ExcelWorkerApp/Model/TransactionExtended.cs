@@ -8,11 +8,11 @@ namespace ExcelWorkerApp.Model
     {
         public bool IsOmitted { get; set; }
         public string GroupId { get; set; }
-        public List<int> TagIds { get; set; }
+        public List<string> TagNames { get; set; }
 
         public TransactionExtended()
         {
-            this.TagIds = new List<int>();
+            this.TagNames = new List<string>();
         }
     }
 }

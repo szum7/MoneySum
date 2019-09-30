@@ -118,7 +118,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
                         if (row.GetCell(10) != null) cast.IsOmitted =   row.GetCell(10).ToString() == "1";
                         if (row.GetCell(11) != null) cast.GroupId =     row.GetCell(11).ToString();
-                        if (row.GetCell(12) != null) cast.TagIds =      this.GetIntList(row.GetCell(12).ToString());
+                        if (row.GetCell(12) != null) cast.TagNames =    this.GetIntList(row.GetCell(12).ToString());
                     }
 
                     this.sheet.AddNewRow(tr);
@@ -129,18 +129,12 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return rowId;
         }
 
-        List<int> GetIntList(string values)
+        List<string> GetIntList(string values)
         {
             if (String.IsNullOrWhiteSpace(values))
                 return null;
 
-            var ret = new List<int>();
-            var arr = values.Split(',');
-            foreach (var item in arr)
-            {
-                ret.Add(int.Parse(item));
-            }
-            return ret;
+            return values.Split(',').ToList();
         }
 
         public void TruncateData()

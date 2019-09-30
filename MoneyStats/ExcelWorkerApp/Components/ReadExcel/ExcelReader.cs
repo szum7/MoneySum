@@ -18,6 +18,8 @@ namespace ExcelWorkerApp.Components.ReadExcel
         ExcelSheet<T> sheet;
         ConsoleWatch watch;
 
+        public bool IsReadFromTheBeginning { get; set; }
+
         public ExcelReader()
         {
             this.sheet = new ExcelSheet<T>();
@@ -77,7 +79,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
                 if (this.sheet.IsHeaderEmpty())
                 {
-                    IRow headerRow = sheet.GetRow(0); //Get Header Row
+                    IRow headerRow = sheet.GetRow(0);
                     int cellCount = headerRow.LastCellNum;
                     for (int j = 0; j < cellCount; j++)
                     {
@@ -89,13 +91,21 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     }
                 }
 
-                for (int i = sheet.LastRowNum; i > (sheet.FirstRowNum + 1); i--) //Read Excel File
+                int i = sheet.LastRowNum;
+                if (IsReadFromTheBeginning)
+                {
+                    i = sheet.FirstRowNum + 1;
+                }
+
+                while ((IsReadFromTheBeginning && i <= sheet.LastRowNum) || (!IsReadFromTheBeginning && i > (sheet.FirstRowNum + 1)))
+                //for (int i = sheet.LastRowNum; i > (sheet.FirstRowNum + 1); i--) //Read Excel File
                 {
                     IRow row = sheet.GetRow(i);
-                    if (row == null)
+                    if (row == null || row.Cells.All(d => d.CellType == CellType.Blank))
+                    {
+                        i = this.GetNextIteration(i);
                         continue;
-                    if (row.Cells.All(d => d.CellType == CellType.Blank))
-                        continue;
+                    }
 
                     T tr = new T();
 
@@ -124,9 +134,20 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     this.sheet.AddNewRow(tr);
 
                     rowId++;
+
+                    i = this.GetNextIteration(i);
                 }
             }
             return rowId;
+        }
+
+        int GetNextIteration(int i)
+        {
+            if (IsReadFromTheBeginning)
+            {
+                return i + 1;
+            }
+            return i - 1;
         }
 
         List<string> GetIntList(string values)
@@ -147,8 +168,9 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
         public void TruncateData()
         {
+            this.watch.PrintTime($"STARTED {this.GetType().Name}");
             int truncatedRowCount = this.sheet.Truncate();
-            this.watch.PrintDiff($"FINISHED. {truncatedRowCount} truncated rows, {this.sheet.Transactions.Count} remaining.");
+            this.watch.PrintDiff($"FINISHED. {truncatedRowCount} truncated rows, {this.sheet.Transactions.Count} remaining.\n");
         }
     }
 }

@@ -10,35 +10,42 @@ namespace ExcelWorkerApp
         static void Main(string[] args)
         {
             // Read many bank-exported excel files
+#if true
             ExcelReader<Transaction> reader = new ExcelReader<Transaction>();
             ExcelSheet<Transaction> allFiles = reader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
-
+#endif
             // Merge read files
+#if true
             reader.TruncateData();
-
+#endif
             // Write merged file to an excel file
+#if true
             ExcelWriter excelWriter = new ExcelWriter();
             excelWriter.Run(allFiles, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
-
+#endif
             // => User edits the file
-            Console.WriteLine("======");
-            Console.WriteLine("======");
+#if true
+            Console.WriteLine("========================");
+            Console.WriteLine("USER INTERACTION NEEDED!");
+            Console.WriteLine("========================");
             Console.WriteLine("You should edit the merged file now. Type 'OK' to read the merged file, or 'EXIT' to exit the program.");
             string input = "";
-            while (input.ToLower() != "ok" || input.ToLower() == "exit")
+            while (input.ToLower() != "ok")
             {
                 input = Console.ReadLine();
-                if (input == "exit")
+                if (input.ToLower() == "exit")
                 {
                     Console.WriteLine("Program exited.");
                     return;
                 }
             }
-
+#endif
             // Read one merged excel file
+#if true
             var mergedFileReader = new ExcelReader<TransactionExtended>();
+            mergedFileReader.IsReadFromTheBeginning = true;
             var mergedFile = mergedFileReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
-
+#endif
             // Load already existing transactions from database
 
             // Merge db data and merged-excel file data

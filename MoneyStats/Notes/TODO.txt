@@ -1,1 +1,7 @@
 ﻿- ellenőrizni, miért 130 rekord lett 131-ből? (headerrel együtt 131?)
+- átváltani nem-determinisztikus tagelésre. Az excelben megírt tag NEVEK határozzák meg mi van az adatbázisban, nem fordítva. Ha van egy tag név, ami még nem szerepel, akkor azt felveszi a rendszer.
+- add TagGroupId -> pl egy tranzakció: digi, -2500, monthly,bill,DIGI -> TagGroupId=1. A következő ilyen tranzakciónál már csak a TagGroupId-t kell rárakni, nem kell az összes megnevezés.
+- read from beginning or end kapcsoló bevezetése
+
+CHECKS
+- check if all TagGroupId-TagNames is unique

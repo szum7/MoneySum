@@ -1,5 +1,4 @@
 ﻿using ExcelWorkerApp.Components.ReadExcel;
-using ExcelWorkerApp.Components.TruncateTransaction;
 using ExcelWorkerApp.Model;
 using System;
 

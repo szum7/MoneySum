@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[User] (
 	[Username] nvarchar(255) NOT NULL,
 	
 	[ModifiedBy] numeric(15, 0) NULL,
-	[ModifyDate] datetime NULL,
+	[ModifiedDate] datetime NULL,
 	[CreateBy] numeric(15, 0) NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[Setting] (
 	[DBImportFilePath] nvarchar(500) NULL, -- C:\bank\exported\exportedFile.xlsx
 	
 	[ModifiedBy] numeric(15, 0) NULL,
-	[ModifyDate] datetime NULL,
+	[ModifiedDate] datetime NULL,
 	[CreateBy] numeric(15, 0) NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE [dbo].[Currency] (
 	[Name] nvarchar(255) NOT NULL,
 	
 	[ModifiedBy] numeric(15, 0) NULL,
-	[ModifyDate] datetime NULL,
+	[ModifiedDate] datetime NULL,
 	[CreateBy] numeric(15, 0) NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE [dbo].[Transaction] (
 	[Message] nvarchar(500) NULL,
 	
 	[ModifiedBy] numeric(15, 0) NULL,
-	[ModifyDate] datetime NULL,
+	[ModifiedDate] datetime NULL,
 	[CreateBy] numeric(15, 0) NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE [dbo].[Tag] (
 	[Description] varchar(255) NULL,
 	
 	[ModifiedBy] numeric(15, 0) NULL,
-	[ModifyDate] datetime NULL,
+	[ModifiedDate] datetime NULL,
 	[CreateBy] numeric(15, 0) NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,

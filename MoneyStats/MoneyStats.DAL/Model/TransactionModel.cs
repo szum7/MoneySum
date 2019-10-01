@@ -5,7 +5,7 @@ namespace MoneyStats.DAL.Model
 {
     public class TransactionModel : DBModel
     {
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         public DateTime AccountingDate { get; set; }
         public string TransactionId { get; set; }
         public string Type { get; set; }
@@ -14,7 +14,7 @@ namespace MoneyStats.DAL.Model
         public string PartnerAccount { get; set; }
         public string PartnerName { get; set; }
         public decimal Sum { get; set; }
-        public decimal CurrencyId { get; set; }
+        public int CurrencyId { get; set; }
         public string Message { get; set; }
 
         public CurrencyModel Currency { get; set; }

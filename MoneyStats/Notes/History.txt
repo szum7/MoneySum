@@ -1,0 +1,7 @@
+﻿https://stackoverflow.com/questions/1881123/table-naming-underscore-vs-camelcase-namespaces-singular-vs-plural
+https://www.w3schools.com/sql/sql_datatypes.asp
+https://stackoverflow.com/questions/11222968/best-type-for-id-column-in-sql-server-2008
+
+https://www.c-sharpcorner.com/article/entity-framework-database-first-in-asp-net-core2/
+https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/existing-database
+https://docs.microsoft.com/en-us/aspnet/core/data/ef-rp/intro?view=aspnetcore-3.0&tabs=visual-studio

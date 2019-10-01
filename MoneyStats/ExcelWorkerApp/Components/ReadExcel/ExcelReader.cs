@@ -98,10 +98,19 @@ namespace ExcelWorkerApp.Components.ReadExcel
                 }
 
                 while ((IsReadFromTheBeginning && i <= sheet.LastRowNum) || (!IsReadFromTheBeginning && i > (sheet.FirstRowNum + 1)))
-                //for (int i = sheet.LastRowNum; i > (sheet.FirstRowNum + 1); i--) //Read Excel File
                 {
                     IRow row = sheet.GetRow(i);
-                    if (row == null || row.Cells.All(d => d.CellType == CellType.Blank))
+                    if (row == null)
+                    {
+                        i = this.GetNextIteration(i);
+                        continue;
+                    }
+                    if (row.Cells.All(d => d.CellType == CellType.Blank))
+                    {
+                        i = this.GetNextIteration(i);
+                        continue;
+                    }
+                    if (row.GetCell(10) != null && row.GetCell(10).ToString() == "1")
                     {
                         i = this.GetNextIteration(i);
                         continue;

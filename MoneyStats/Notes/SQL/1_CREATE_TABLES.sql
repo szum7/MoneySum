@@ -1,109 +1,111 @@
-CREATE TABLE [dbo].[USER] (
-	[ID] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-	[USERNAME] nvarchar(255) NOT NULL,
+CREATE TABLE [dbo].[User] (
+	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Username] nvarchar(255) NOT NULL,
 	
-	[MODIFY_BY] numeric(15, 0) NULL,
-	[MODIFY_DATE] datetime NULL,
-	[CREATE_BY] numeric(15, 0) NULL,
-	[CREATE_DATE] datetime NULL,
-	[STATE] varchar(1) NOT NULL,
+	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifyDate] datetime NULL,
+	[CreateBy] numeric(15, 0) NULL,
+	[CreateDate] datetime NULL,
+	[State] varchar(1) NOT NULL,
 
-	CONSTRAINT [PK_USER_ID] PRIMARY KEY NONCLUSTERED ([ID])
+	CONSTRAINT [PK_USER_ID] PRIMARY KEY NONCLUSTERED ([Id])
 )
 
-CREATE TABLE [dbo].[SETTING] (
-	[ID] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-	[USER_ID] numeric(15, 0) NOT NULL,
-	[MERGED_FILE_FOLDER_PATH] nvarchar(500) NULL, -- C:\bank\merged
-	[MERGED_FILENAME] nvarchar(500) NULL, -- merged
-	[ORIGINAL_FILE_FOLDER_PATH] nvarchar(500) NULL, -- C:\bank
-	[ORIGINAL_FILE_EXTENSION_PATTERN] nvarchar(500) NULL, -- *.xlsx
-	[DB_EXPORT_FOLDER_PATH] nvarchar(500) NULL, -- C:\bank\exported
-	[DB_EXPORT_FILENAME] nvarchar(500) NULL, -- exportedFile
-	[DB_IMPORT_FILE_PATH] nvarchar(500) NULL, -- C:\bank\exported\exportedFile.xlsx
+CREATE TABLE [dbo].[Setting] (
+	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[UserId] numeric(15, 0) NOT NULL,
+	[MergedFileFolderPath] nvarchar(500) NULL, -- C:\bank\merged
+	[MergedFilename] nvarchar(500) NULL, -- merged
+	[OriginalFileFolderPath] nvarchar(500) NULL, -- C:\bank
+	[OriginalFileExtensionPattern] nvarchar(500) NULL, -- *.xlsx
+	[DBExportFolderPath] nvarchar(500) NULL, -- C:\bank\exported
+	[DBExportFilename] nvarchar(500) NULL, -- exportedFile
+	[DBImportFilePath] nvarchar(500) NULL, -- C:\bank\exported\exportedFile.xlsx
 	
-	[MODIFY_BY] numeric(15, 0) NULL,
-	[MODIFY_DATE] datetime NULL,
-	[CREATE_BY] numeric(15, 0) NULL,
-	[CREATE_DATE] datetime NULL,
-	[STATE] varchar(1) NOT NULL,
+	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifyDate] datetime NULL,
+	[CreateBy] numeric(15, 0) NULL,
+	[CreateDate] datetime NULL,
+	[State] varchar(1) NOT NULL,
 
-	CONSTRAINT [PK_SETTI_ID] PRIMARY KEY NONCLUSTERED ([ID]),
-	CONSTRAINT [FK_USER_ID] FOREIGN KEY ([USER_ID]) 
-		REFERENCES [dbo].[USER] ([ID]) 
+	CONSTRAINT [PK_SETTI_ID] PRIMARY KEY NONCLUSTERED ([Id]),
+	CONSTRAINT [FK_USER_ID] FOREIGN KEY ([UserId]) 
+		REFERENCES [dbo].[User] ([Id]) 
 		ON UPDATE NO ACTION
 		ON DELETE NO ACTION
 )
 
 
-CREATE TABLE [dbo].[CURRENCY] (
-	[ID] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-	[NAME] nvarchar(255) NOT NULL,
+CREATE TABLE [dbo].[Currency] (
+	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Name] nvarchar(255) NOT NULL,
 	
-	[MODIFY_BY] numeric(15, 0) NULL,
-	[MODIFY_DATE] datetime NULL,
-	[CREATE_BY] numeric(15, 0) NULL,
-	[CREATE_DATE] datetime NULL,
-	[STATE] varchar(1) NOT NULL,
+	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifyDate] datetime NULL,
+	[CreateBy] numeric(15, 0) NULL,
+	[CreateDate] datetime NULL,
+	[State] varchar(1) NOT NULL,
 	
-	CONSTRAINT [PK_CURR_ID] PRIMARY KEY NONCLUSTERED ([ID])
+	CONSTRAINT [PK_CURR_ID] PRIMARY KEY NONCLUSTERED ([Id])
 )
 
 
-CREATE TABLE [dbo].[TRANSACTION] (
-	[ID] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-	[ACCOUNTING_DATE] datetime NOT NULL,
-	[TRANSACTION_ID] nvarchar(255) NULL,
-	[TYPE] nvarchar(255) NULL,
-	[ACCOUNT] nvarchar(255) NULL,
-	[ACCOUNT_NAME] nvarchar(255) NULL,
-	[PARTNER_ACCOUNT] nvarchar(255) NULL,
-	[PARTNER_NAME] nvarchar(255) NULL,
-	[SUM] numeric(15, 2) NULL,
-	[CURRENCY_ID] numeric(15, 0) NULL,
-	[MESSAGE] nvarchar(500) NULL,
+CREATE TABLE [dbo].[Transaction] (
+	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[AccountingDate] datetime NOT NULL,
+	[TransactionId] nvarchar(255) NULL,
+	[Type] nvarchar(255) NULL,
+	[Account] nvarchar(255) NULL,
+	[AccountName] nvarchar(255) NULL,
+	[PartnerAccount] nvarchar(255) NULL,
+	[PartnerName] nvarchar(255) NULL,
+	[Sum] numeric(15, 2) NULL,
+	[CurrencyId] numeric(15, 0) NULL,
+	[Message] nvarchar(500) NULL,
 	
-	[MODIFY_BY] numeric(15, 0) NULL,
-	[MODIFY_DATE] datetime NULL,
-	[CREATE_BY] numeric(15, 0) NULL,
-	[CREATE_DATE] datetime NULL,
-	[STATE] varchar(1) NOT NULL,
+	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifyDate] datetime NULL,
+	[CreateBy] numeric(15, 0) NULL,
+	[CreateDate] datetime NULL,
+	[State] varchar(1) NOT NULL,
 	
-	CONSTRAINT [PK_TRAN_ID] PRIMARY KEY NONCLUSTERED ([ID]),
-	CONSTRAINT [FK_TRAN_CURRENCY_ID] FOREIGN KEY ([CURRENCY_ID]) 
-		REFERENCES [dbo].[CURRENCY] ([ID]) 
+	CONSTRAINT [PK_TRAN_ID] PRIMARY KEY NONCLUSTERED ([Id]),
+	CONSTRAINT [FK_TRAN_CURRENCY_ID] FOREIGN KEY ([CurrencyId]) 
+		REFERENCES [dbo].[Currency] ([Id]) 
 		ON UPDATE NO ACTION
 		ON DELETE NO ACTION
 )
 
 
-CREATE TABLE [dbo].[TAG] (
-  [ID] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-  [TITLE] varchar(255) NOT NULL,
-  [DESCRIPTION] varchar(255) NULL,
-  
-  [MODIFY_BY] numeric(15, 0) NULL,
-  [MODIFY_DATE] datetime NULL,
-  [CREATE_BY] numeric(15, 0) NULL,
-  [CREATE_DATE] datetime NULL,
-  [STATE] varchar(1) NOT NULL,
-  CONSTRAINT [PK_TAGT_ID] PRIMARY KEY NONCLUSTERED ([ID])
+CREATE TABLE [dbo].[Tag] (
+	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Title] varchar(255) NOT NULL,
+	[Description] varchar(255) NULL,
+	
+	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifyDate] datetime NULL,
+	[CreateBy] numeric(15, 0) NULL,
+	[CreateDate] datetime NULL,
+	[State] varchar(1) NOT NULL,
+
+	CONSTRAINT [PK_TAGT_ID] PRIMARY KEY NONCLUSTERED ([Id])
 )
 
 
-CREATE TABLE [dbo].[TRANSACTION_TAG_CONN] (
-  [ID] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-  [TRANSACTION_ID] numeric(15, 0) NOT NULL,
-  [TAG_ID] numeric(15, 0) NOT NULL,
-  CONSTRAINT [PK_TTCT_ID] PRIMARY KEY NONCLUSTERED ([ID]),
-  CONSTRAINT [FK_TRAN_ID] FOREIGN KEY ([TRANSACTION_ID]) 
-	  REFERENCES [dbo].[TRANSACTION] ([ID]) 
-	  ON UPDATE NO ACTION
-	  ON DELETE NO ACTION,
-  CONSTRAINT [FK_TAG_ID] FOREIGN KEY ([TAG_ID]) 
-	  REFERENCES [dbo].[TAG] ([ID]) 
-	  ON UPDATE NO ACTION
-	  ON DELETE NO ACTION
+CREATE TABLE [dbo].[TransactionTagConn] (
+	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[TransactionId] numeric(15, 0) NOT NULL,
+	[TagId] numeric(15, 0) NOT NULL,
+
+	CONSTRAINT [PK_TTCT_ID] PRIMARY KEY NONCLUSTERED ([Id]),
+	CONSTRAINT [FK_TRAN_ID] FOREIGN KEY ([TransactionId]) 
+		REFERENCES [dbo].[Transaction] ([Id]) 
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT [FK_TAG_ID] FOREIGN KEY ([TagId]) 
+		REFERENCES [dbo].[Tag] ([Id]) 
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
 )
 
 

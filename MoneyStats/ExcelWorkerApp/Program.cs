@@ -1,4 +1,5 @@
-﻿using ExcelWorkerApp.Components.ReadExcel;
+﻿using ExcelWorkerApp.Components.MergeTransaction;
+using ExcelWorkerApp.Components.ReadExcel;
 using ExcelWorkerApp.Components.WriteExcel;
 using ExcelWorkerApp.Model;
 using MoneyStats.BL;
@@ -12,7 +13,7 @@ namespace ExcelWorkerApp
         {
 #if false
             var repo = new TransactionRepository();
-            var list = repo.Get();
+            var list = repo.GetWithEntities();
             return;
 #endif
 
@@ -59,10 +60,16 @@ namespace ExcelWorkerApp
 #endif
 
             // Load already existing transactions from database
-
+#if true
+            var repo = new TransactionRepository();
+            var transactionsFromDB = repo.GetWithEntities();
+#endif
 
             // Merge db data and merged-excel file data
-
+#if true
+            var merger = new TransactionMerger();
+            var mergedList = merger.Run(transactionsFromDB, mergedFile.Transactions);
+#endif
 
             // Write to db
 

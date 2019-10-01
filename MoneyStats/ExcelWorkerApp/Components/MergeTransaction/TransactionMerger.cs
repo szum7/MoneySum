@@ -1,24 +1,145 @@
 ﻿using ExcelWorkerApp.Model;
+using MoneyStats.DAL.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ExcelWorkerApp.Components.MergeTransaction
 {
-    /// <summary>
-    /// 
-    /// </summary>
     class TransactionMerger
     {
-        public List<Transaction> Run(List<Transaction> tr1, List<Transaction> tr2)
+        public List<TransactionModel> Run(List<TransactionModel> tr1, List<TransactionExtended> tr2)
         {
-            List<Transaction> merged = new List<Transaction>();
+            // Order by date
+            tr1.OrderBy(x => x.AccountingDate);
+            tr2.OrderBy(x => x.AccountingDate);
 
-            // Sort tr1 on date
-            // Sort tr2 on date
+            var groupDict = this.GetTagGroupDictionary(tr2);
+
             // Merge
+            List<TransactionModel> merged = new List<TransactionModel>();
+            int i = 0, j = 0;
+            while (i < tr1.Count && j < tr2.Count)
+            {
+                if (tr1[i].AccountingDate < tr2[j].AccountingDate)
+                {
+                    merged.Add(tr1[i]);
+                    i++;
+                }
+                else if (tr1[i].AccountingDate > tr2[j].AccountingDate)
+                {
+                    merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                    j++;
+                }
+                else
+                {
+                    merged.Add(tr1[i]);
+                    if (tr1[i].ContentId != tr2[j].ContentId)
+                    {
+                        merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                    }
+                    i++;
+                    j++;
+
+                }
+            }
+            while (i < tr1.Count)
+            {
+                merged.Add(tr1[i]);
+                i++;
+            }
+            while (j < tr2.Count)
+            {
+                merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                j++;
+            }
 
             return merged;
+        }
+
+        public IEnumerable<TransactionModel> GetNewRows(List<TransactionModel> list)
+        {
+            return list.Where(x => x.Id == -1);
+        }
+
+        Dictionary<string, List<string>> GetTagGroupDictionary(List<TransactionExtended> list)
+        {
+            var dict = new Dictionary<string, List<string>>();
+
+            foreach (var item in list)
+            {
+                if (!dict.ContainsKey(item.TagGroupId) && item.TagNames.Count > 0)
+                {
+                    dict.Add(item.TagGroupId, item.TagNames);
+                }
+            }
+
+            return dict;
+        }
+
+        List<TagModel> GetNewTags(TransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
+        {
+            var tags = new List<TagModel>();
+            if (String.IsNullOrWhiteSpace(tr.GroupId))
+            {
+                foreach (var item in tr.TagNames)
+                {
+                    tags.Add(new TagModel()
+                    {
+                        Id = -1,
+                        Title = item
+                    });
+                }
+            }
+            else
+            {
+                if (tagGroupDict == null || tagGroupDict.Count == 0)
+                {
+                    Console.WriteLine("New row's TagGroupId is set, but the dictionary contains no elements!");
+                }
+                else if (!tagGroupDict.ContainsKey(tr.TagGroupId))
+                {
+                    Console.WriteLine("The new row's TagGroupId was not found in the dictionary!");
+                }
+                else
+                {
+                    foreach (var item in tagGroupDict[tr.TagGroupId])
+                    {
+                        tags.Add(new TagModel()
+                        {
+                            Id = -1,
+                            Title = item
+                        });
+                    }
+                }
+            }
+            return tags;
+        }
+
+        TransactionModel ConvertToModel(TransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
+        {
+            var tags = this.GetNewTags(tr, tagGroupDict);
+
+            return new TransactionModel()
+            {
+                Id = -1,
+                Account = tr.Account,
+                AccountName = tr.AccountName,
+                AccountingDate = tr.AccountingDate,
+                Type = tr.Type,
+                TransactionId = tr.TransactionId,
+                PartnerAccount = tr.PartnerAccount,
+                PartnerName = tr.PartnerName,
+                Sum = (decimal?)tr.Sum,
+                Message = tr.Message,
+                Tags = tags != null ? tags : null,
+                Currency = new CurrencyModel()
+                {
+                    Id = -1,
+                    Name = tr.Currency
+                }
+            };
         }
     }
 }

@@ -1,10 +1,10 @@
 CREATE TABLE [dbo].[User] (
-	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Id] int IDENTITY(1, 1) NOT NULL,
 	[Username] nvarchar(255) NOT NULL,
 	
-	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifiedBy] int NULL,
 	[ModifiedDate] datetime NULL,
-	[CreateBy] numeric(15, 0) NULL,
+	[CreateBy] int NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
 
@@ -12,8 +12,8 @@ CREATE TABLE [dbo].[User] (
 )
 
 CREATE TABLE [dbo].[Setting] (
-	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-	[UserId] numeric(15, 0) NOT NULL,
+	[Id] int IDENTITY(1, 1) NOT NULL,
+	[UserId] int NOT NULL,
 	[MergedFileFolderPath] nvarchar(500) NULL, -- C:\bank\merged
 	[MergedFilename] nvarchar(500) NULL, -- merged
 	[OriginalFileFolderPath] nvarchar(500) NULL, -- C:\bank
@@ -22,9 +22,9 @@ CREATE TABLE [dbo].[Setting] (
 	[DBExportFilename] nvarchar(500) NULL, -- exportedFile
 	[DBImportFilePath] nvarchar(500) NULL, -- C:\bank\exported\exportedFile.xlsx
 	
-	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifiedBy] int NULL,
 	[ModifiedDate] datetime NULL,
-	[CreateBy] numeric(15, 0) NULL,
+	[CreateBy] int NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
 
@@ -37,12 +37,12 @@ CREATE TABLE [dbo].[Setting] (
 
 
 CREATE TABLE [dbo].[Currency] (
-	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Id] int IDENTITY(1, 1) NOT NULL,
 	[Name] nvarchar(255) NOT NULL,
 	
-	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifiedBy] int NULL,
 	[ModifiedDate] datetime NULL,
-	[CreateBy] numeric(15, 0) NULL,
+	[CreateBy] int NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
 	
@@ -51,7 +51,7 @@ CREATE TABLE [dbo].[Currency] (
 
 
 CREATE TABLE [dbo].[Transaction] (
-	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Id] int IDENTITY(1, 1) NOT NULL,
 	[AccountingDate] datetime NOT NULL,
 	[TransactionId] nvarchar(255) NULL,
 	[Type] nvarchar(255) NULL,
@@ -60,12 +60,12 @@ CREATE TABLE [dbo].[Transaction] (
 	[PartnerAccount] nvarchar(255) NULL,
 	[PartnerName] nvarchar(255) NULL,
 	[Sum] numeric(15, 2) NULL,
-	[CurrencyId] numeric(15, 0) NULL,
+	[CurrencyId] int NULL,
 	[Message] nvarchar(500) NULL,
 	
-	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifiedBy] int NULL,
 	[ModifiedDate] datetime NULL,
-	[CreateBy] numeric(15, 0) NULL,
+	[CreateBy] int NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
 	
@@ -78,13 +78,13 @@ CREATE TABLE [dbo].[Transaction] (
 
 
 CREATE TABLE [dbo].[Tag] (
-	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
+	[Id] int IDENTITY(1, 1) NOT NULL,
 	[Title] varchar(255) NOT NULL,
 	[Description] varchar(255) NULL,
 	
-	[ModifiedBy] numeric(15, 0) NULL,
+	[ModifiedBy] int NULL,
 	[ModifiedDate] datetime NULL,
-	[CreateBy] numeric(15, 0) NULL,
+	[CreateBy] int NULL,
 	[CreateDate] datetime NULL,
 	[State] varchar(1) NOT NULL,
 
@@ -93,9 +93,9 @@ CREATE TABLE [dbo].[Tag] (
 
 
 CREATE TABLE [dbo].[TransactionTagConn] (
-	[Id] numeric(15, 0) IDENTITY(1, 1) NOT NULL,
-	[TransactionId] numeric(15, 0) NOT NULL,
-	[TagId] numeric(15, 0) NOT NULL,
+	[Id] int IDENTITY(1, 1) NOT NULL,
+	[TransactionId] int NOT NULL,
+	[TagId] int NOT NULL,
 
 	CONSTRAINT [PK_TTCT_ID] PRIMARY KEY NONCLUSTERED ([Id]),
 	CONSTRAINT [FK_TRAN_ID] FOREIGN KEY ([TransactionId]) 

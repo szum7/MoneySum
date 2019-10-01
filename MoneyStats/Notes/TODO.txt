@@ -3,6 +3,11 @@ o átváltani nem-determinisztikus tagelésre. Az excelben megírt tag NEVEK hat
 o add TagGroupId -> pl egy tranzakció: digi, -2500, monthly,bill,DIGI -> TagGroupId=1. A következő ilyen tranzakciónál már csak a TagGroupId-t kell rárakni, nem kell az összes megnevezés.
 o read from beginning or end kapcsoló bevezetése
 o tesztelni, hogy az elejétől olvasásnál jó-e a végfeltétel (IsReadFromTheBeginning && i < sheet.LastRowNum)
+- TransactionModel.ContentId tudjon megegyezni a Transaction.ContentId-vel (ne különbözzön az egyes paraméterek ToString-je)
+o bevezetni és használni az isOmitted-ed (tényleg hagyjuk ki, ami ki van hagyva)
 
 CHECKS
 - check if all TagGroupId-TagNames is unique
+
+IDEA
+- create Object list from string list telling which property is the string

@@ -6,12 +6,12 @@ namespace MoneyStats.DAL
 {
     public class DBContext : DbContext
     {
-        public DbSet<CurrencyModel> CURRENCY { get; set; }
-        public DbSet<SettingModel> SETTING { get; set; }
-        public DbSet<TagModel> TAG { get; set; }
-        public DbSet<TransactionModel> TRANSACTION { get; set; }
-        public DbSet<UserModel> USER { get; set; }
-        public DbSet<TransactionTagConnModel> TRANSACTION_TAG_CONN { get; set; }
+        public DbSet<CurrencyModel> Currency { get; set; }
+        //public DbSet<SettingModel> Setting { get; set; } // unused
+        public DbSet<TagModel> Tag { get; set; }
+        public DbSet<TransactionModel> Transaction { get; set; }
+        public DbSet<UserModel> User { get; set; }
+        public DbSet<TransactionTagConnModel> TransactionTagConn { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

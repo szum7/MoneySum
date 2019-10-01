@@ -9,4 +9,8 @@
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MoneyStats.BL\MoneyStats.BL.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 ﻿using ExcelWorkerApp.Components.ReadExcel;
 using ExcelWorkerApp.Components.WriteExcel;
 using ExcelWorkerApp.Model;
+using MoneyStats.BL;
 using System;
 
 namespace ExcelWorkerApp
@@ -9,6 +10,12 @@ namespace ExcelWorkerApp
     {
         static void Main(string[] args)
         {
+#if false
+            var repo = new TransactionRepository();
+            var list = repo.Get();
+            return;
+#endif
+
             // Read many bank-exported excel files
 #if true
             ExcelReader<Transaction> reader = new ExcelReader<Transaction>();

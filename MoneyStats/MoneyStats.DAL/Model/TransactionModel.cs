@@ -5,7 +5,6 @@ namespace MoneyStats.DAL.Model
 {
     public partial class TransactionModel : DBModel
     {
-        public int Id { get; set; }
         public DateTime AccountingDate { get; set; }
         public string TransactionId { get; set; }
         public string Type { get; set; }

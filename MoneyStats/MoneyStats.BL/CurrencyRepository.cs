@@ -21,5 +21,23 @@ namespace MoneyStats.BL
                         }).ToList();
             }
         }
+
+        public Dictionary<string, int> GetTitleKeyedDictionary()
+        {
+            using (var context = new DBContext())
+            {
+                return (from d in context.Currency
+                        select new { d.Name, d.Id }).ToDictionary(k => k.Name, v => v.Id);
+            }
+        }
+
+        public void Save(List<CurrencyModel> currencies)
+        {
+            using (var context = new DBContext())
+            {
+                context.Currency.AddRange(currencies);
+                context.SaveChanges();
+            }
+        }
     }
 }

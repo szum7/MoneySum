@@ -75,7 +75,7 @@ namespace MoneyStats.BL
             }
         }
         
-        public void Save(List<TransactionModel> transactions)
+        public void Save(IEnumerable<TransactionModel> transactions)
         {
             using (var context = new DBContext())
             {
@@ -84,7 +84,11 @@ namespace MoneyStats.BL
             }
         }
 
-        void SmartSave(List<TransactionModel> transactions)
+        /// <summary>
+        /// Saves the transactions and all it's associated objects (tags, currency)
+        /// </summary>
+        /// <param name="transactionsToBeSaved"></param>
+        public void SmartSave(IEnumerable<TransactionModel> transactionsToBeSaved)
         {
             using (var context = new DBContext())
             {
@@ -94,7 +98,7 @@ namespace MoneyStats.BL
 
                 // Get not-yet-in-db tags
                 var tagsToBeSaved = new List<TagModel>();
-                foreach (var item in transactions)
+                foreach (var item in transactionsToBeSaved)
                 {
                     foreach (var tag in item.Tags)
                     {
@@ -116,12 +120,36 @@ namespace MoneyStats.BL
                 // Update tags dictionary
                 tagDict = tagRepo.GetTitleKeyedDictionary();
 
+                // Get currency dictionary
+                var currencyRepo = new CurrencyRepository();
+                var currencyDict = currencyRepo.GetTitleKeyedDictionary();
+
+                // Get not-yet-in-db currencies
+                var currenciesToBeSaved = new List<CurrencyModel>();
+                foreach (var item in transactionsToBeSaved)
+                {
+                    if (!currencyDict.ContainsKey(item.Currency.Name))
+                    {
+                        currenciesToBeSaved.Add(item.Currency);
+                    }
+                }
+
+                // Save newly created currencies
+                currencyRepo.Save(currenciesToBeSaved); // Got ids
+
+                // Update transactions' currencyIds
+                currencyDict = currencyRepo.GetTitleKeyedDictionary();
+                foreach (var transaction in transactionsToBeSaved)
+                {
+                    transaction.CurrencyId = currencyDict[transaction.Currency.Name];
+                }
+
                 // Save transactions
-                this.Save(transactions); // Got ids
+                this.Save(transactionsToBeSaved); // Got ids
 
                 // Get not-yet-in-db transactionTagConnections
                 var ttcToBeSaved = new List<TransactionTagConnModel>();
-                foreach (var transaction in transactions)
+                foreach (var transaction in transactionsToBeSaved)
                 {
                     foreach (var tag in transaction.Tags)
                     {

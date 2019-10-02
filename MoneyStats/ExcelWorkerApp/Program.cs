@@ -11,21 +11,26 @@ namespace ExcelWorkerApp
     {
         static void Main(string[] args)
         {
+            var excelReader = new ExcelReader<Transaction>();
+            var transactionRepo = new TransactionRepository();
+            var mergedFileReader = new ExcelReader<TransactionExtended>();
+            var transactionMerger = new TransactionMerger();
+
+
+            // Test section
 #if false
-            var repo = new TransactionRepository();
-            var list = repo.GetWithEntities();
+            var list = transactionRepo.GetWithEntities();
             return;
 #endif
 
             // Read many bank-exported excel files
 #if true
-            ExcelReader<Transaction> reader = new ExcelReader<Transaction>();
-            ExcelSheet<Transaction> allFiles = reader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
+            ExcelSheet<Transaction> allFiles = excelReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
 #endif
 
             // Merge read files
 #if true
-            reader.TruncateData();
+            excelReader.TruncateData();
 #endif
 
             // Write merged file to an excel file
@@ -53,26 +58,26 @@ namespace ExcelWorkerApp
 #endif
 
             // Read one merged excel file
-#if true
-            var mergedFileReader = new ExcelReader<TransactionExtended>();
+#if true            
             mergedFileReader.IsReadFromTheBeginning = true;
             var mergedFile = mergedFileReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
 
             // Load already existing transactions from database
 #if true
-            var repo = new TransactionRepository();
-            var transactionsFromDB = repo.GetWithEntities();
+            var transactionsFromDB = transactionRepo.GetWithEntities();
 #endif
 
             // Merge db data and merged-excel file data
-#if true
-            var merger = new TransactionMerger();
-            var mergedList = merger.Run(transactionsFromDB, mergedFile.Transactions);
+#if true            
+            var mergedList = transactionMerger.Run(transactionsFromDB, mergedFile.Transactions);
+            var unsavedTransactionList = transactionMerger.GetNewRows(mergedList);
 #endif
 
             // Write to db
-
+#if true
+            transactionRepo.SmartSave(unsavedTransactionList);
+#endif
 
             Console.WriteLine("PROGRAM ENDED.");
         }

@@ -78,12 +78,21 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return dict;
         }
 
-        List<TagModel> GetNewTags(TransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
+        List<TagModel> GetTagModelListByTagGroupId(TransactionExtended transaction, Dictionary<string, List<string>> tagGroupDict)
         {
             var tags = new List<TagModel>();
-            if (String.IsNullOrWhiteSpace(tr.GroupId))
+            if (tagGroupDict == null || tagGroupDict.Count == 0)
             {
-                foreach (var item in tr.TagNames)
+                Console.WriteLine("New row's TagGroupId is set, but the dictionary contains no elements!");
+            }
+            else if (!tagGroupDict.ContainsKey(transaction.TagGroupId))
+            {
+                Console.WriteLine("The new row's TagGroupId was not found in the dictionary!");
+            }
+            else // Has TagGroupId, create a TagModel list
+            {
+                var groupNames = tagGroupDict[transaction.TagGroupId];
+                foreach (var item in groupNames)
                 {
                     tags.Add(new TagModel()
                     {
@@ -92,34 +101,34 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                     });
                 }
             }
-            else
+            return tags.Count > 0 ? tags : null;
+        }
+
+        List<TagModel> GetTagModelList(TransactionExtended transaction)
+        {
+            var tags = new List<TagModel>();
+            foreach (var item in transaction.TagNames)
             {
-                if (tagGroupDict == null || tagGroupDict.Count == 0)
+                tags.Add(new TagModel()
                 {
-                    Console.WriteLine("New row's TagGroupId is set, but the dictionary contains no elements!");
-                }
-                else if (!tagGroupDict.ContainsKey(tr.TagGroupId))
-                {
-                    Console.WriteLine("The new row's TagGroupId was not found in the dictionary!");
-                }
-                else
-                {
-                    foreach (var item in tagGroupDict[tr.TagGroupId])
-                    {
-                        tags.Add(new TagModel()
-                        {
-                            Id = -1,
-                            Title = item
-                        });
-                    }
-                }
+                    Id = -1,
+                    Title = item
+                });
             }
-            return tags;
+            return tags.Count > 0 ? tags : null;
         }
 
         TransactionModel ConvertToModel(TransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
         {
-            var tags = this.GetNewTags(tr, tagGroupDict);
+            List<TagModel> tags = null;
+            if (String.IsNullOrWhiteSpace(tr.GroupId))
+            {
+                tags = this.GetTagModelList(tr);
+            }
+            else
+            {
+                tags = this.GetTagModelListByTagGroupId(tr, tagGroupDict);
+            }
 
             return new TransactionModel()
             {
@@ -133,7 +142,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 PartnerName = tr.PartnerName,
                 Sum = (decimal?)tr.Sum,
                 Message = tr.Message,
-                Tags = tags != null ? tags : null,
+                Tags = tags,
                 Currency = new CurrencyModel()
                 {
                     Id = -1,

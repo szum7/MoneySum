@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MoneyStats.DAL.Model
+namespace MoneyStats.DAL.Models
 {
-    public partial class TransactionModel
+    public partial class Transaction
     {
-        public ICollection<TagModel> Tags { get; set; }
+        [NotMapped]
+        public List<Tag> Tags { get; set; }
 
-        public TransactionModel()
+        public Transaction()
         {
-            this.TransactionTagConn = new List<TransactionTagConnModel>();
-            this.Tags = new List<TagModel>();
+            this.TransactionTagConn = new HashSet<TransactionTagConn>();
+            this.Tags = new List<Tag>();
         }
 
+        [NotMapped]
         public string ContentId
         {
             get

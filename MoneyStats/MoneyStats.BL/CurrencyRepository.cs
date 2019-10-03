@@ -1,4 +1,4 @@
-﻿using MoneyStats.DAL.Model;
+﻿using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,12 +9,12 @@ namespace MoneyStats.BL
 {
     public class CurrencyRepository
     {
-        public List<CurrencyModel> Get()
+        public List<Currency> Get()
         {
-            using (var context = new DBContext())
+            using (var context = new MoneyStatsContext())
             {
                 return (from d in context.Currency
-                        select new CurrencyModel()
+                        select new Currency()
                         {
                             Id = d.Id,
                             Name = d.Name
@@ -24,16 +24,16 @@ namespace MoneyStats.BL
 
         public Dictionary<string, int> GetTitleKeyedDictionary()
         {
-            using (var context = new DBContext())
+            using (var context = new MoneyStatsContext())
             {
                 return (from d in context.Currency
                         select new { d.Name, d.Id }).ToDictionary(k => k.Name, v => v.Id);
             }
         }
 
-        public void Save(List<CurrencyModel> currencies)
+        public void Save(List<Currency> currencies)
         {
-            using (var context = new DBContext())
+            using (var context = new MoneyStatsContext())
             {
                 context.Currency.AddRange(currencies);
                 context.SaveChanges();

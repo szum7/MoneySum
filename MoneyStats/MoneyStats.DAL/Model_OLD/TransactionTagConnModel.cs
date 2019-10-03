@@ -6,7 +6,7 @@
         public int TransactionId { get; set; }
         public int TagId { get; set; }
 
-        public TransactionModel Transaction { get; set; }
+        public Transaction Transaction { get; set; }
         public TagModel Tag { get; set; }
     }
 }

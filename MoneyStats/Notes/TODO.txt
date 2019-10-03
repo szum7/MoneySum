@@ -6,6 +6,7 @@ o tesztelni, hogy az elejétől olvasásnál jó-e a végfeltétel (IsReadFromTh
 - TransactionModel.ContentId tudjon megegyezni a Transaction.ContentId-vel (ne különbözzön az egyes paraméterek ToString-je)
 o bevezetni és használni az isOmitted-ed (tényleg hagyjuk ki, ami ki van hagyva)
 - nem jó a merge, 130 + 2 included rowból 132 lesz (130 kéne maradjon)
+- minus id növelést és elérést kezelni és kiszervezni valami értelmes helyre
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

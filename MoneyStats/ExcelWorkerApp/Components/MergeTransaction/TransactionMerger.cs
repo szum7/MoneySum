@@ -1,5 +1,5 @@
 ﻿using ExcelWorkerApp.Model;
-using MoneyStats.DAL.Model;
+using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 {
     class TransactionMerger
     {
-        public List<TransactionModel> Run(List<TransactionModel> tr1, List<ExcelTransactionExtended> tr2)
+        public List<Transaction> Run(List<Transaction> tr1, List<ExcelTransactionExtended> tr2)
         {
             // Order by date
             tr1.OrderBy(x => x.AccountingDate);
@@ -18,7 +18,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             var groupDict = this.GetTagGroupDictionary(tr2);
 
             // Merge
-            List<TransactionModel> merged = new List<TransactionModel>();
+            List<Transaction> merged = new List<Transaction>();
             int i = 0, j = 0;
             while (i < tr1.Count && j < tr2.Count)
             {
@@ -58,9 +58,9 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return merged;
         }
 
-        public IEnumerable<TransactionModel> GetNewRows(List<TransactionModel> list)
+        public List<Transaction> GetNewRows(List<Transaction> list)
         {
-            return list.Where(x => x.Id == -1);
+            return list.Where(x => x.Id == -1).ToList();
         }
 
         Dictionary<string, List<string>> GetTagGroupDictionary(List<ExcelTransactionExtended> list)
@@ -80,9 +80,11 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return dict;
         }
 
-        List<TagModel> GetTagModelListByTagGroupId(ExcelTransactionExtended transaction, Dictionary<string, List<string>> tagGroupDict)
+        int newTagId = -1;
+
+        List<Tag> GetTagModelListByTagGroupId(ExcelTransactionExtended transaction, Dictionary<string, List<string>> tagGroupDict)
         {
-            var tags = new List<TagModel>();
+            var tags = new List<Tag>();
             if (tagGroupDict == null || tagGroupDict.Count == 0)
             {
                 Console.WriteLine("New row's TagGroupId is set, but the dictionary contains no elements!");
@@ -96,9 +98,9 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 var groupNames = tagGroupDict[transaction.TagGroupId];
                 foreach (var item in groupNames)
                 {
-                    tags.Add(new TagModel()
+                    tags.Add(new Tag()
                     {
-                        Id = -1,
+                        Id = this.newTagId--,
                         Title = item
                     });
                 }
@@ -106,23 +108,25 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return tags.Count > 0 ? tags : null;
         }
 
-        List<TagModel> GetTagModelList(ExcelTransactionExtended transaction)
+        List<Tag> GetTagModelList(ExcelTransactionExtended transaction)
         {
-            var tags = new List<TagModel>();
+            var tags = new List<Tag>();
             foreach (var item in transaction.TagNames)
             {
-                tags.Add(new TagModel()
+                tags.Add(new Tag()
                 {
-                    Id = -1,
+                    Id = this.newTagId--,
                     Title = item
                 });
             }
             return tags.Count > 0 ? tags : null;
         }
 
-        TransactionModel ConvertToModel(ExcelTransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
+        int newTransactionId = -1;
+
+        Transaction ConvertToModel(ExcelTransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
         {
-            List<TagModel> tags = null;
+            List<Tag> tags = null;
             if (String.IsNullOrWhiteSpace(tr.GroupId))
             {
                 tags = this.GetTagModelList(tr);
@@ -132,9 +136,9 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 tags = this.GetTagModelListByTagGroupId(tr, tagGroupDict);
             }
 
-            return new TransactionModel()
+            return new Transaction()
             {
-                Id = -1,
+                Id = this.newTransactionId--,
                 Account = tr.Account,
                 AccountName = tr.AccountName,
                 AccountingDate = tr.AccountingDate,
@@ -145,9 +149,9 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 Sum = (decimal?)tr.Sum,
                 Message = tr.Message,
                 Tags = tags,
-                Currency = new CurrencyModel()
+                Currency = new Currency()
                 {
-                    Id = -1,
+                    Id = this.newTransactionId--,
                     Name = tr.Currency
                 }
             };

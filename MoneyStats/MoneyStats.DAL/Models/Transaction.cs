@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MoneyStats.DAL.Model
+namespace MoneyStats.DAL.Models
 {
-    public partial class TransactionModel : DBModel
+    public partial class Transaction
     {
+        public int Id { get; set; }
         public DateTime AccountingDate { get; set; }
         public string TransactionId { get; set; }
         public string Type { get; set; }
@@ -15,8 +16,13 @@ namespace MoneyStats.DAL.Model
         public decimal? Sum { get; set; }
         public int? CurrencyId { get; set; }
         public string Message { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public int? CreateBy { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public string State { get; set; }
 
-        public CurrencyModel Currency { get; set; }
-        public ICollection<TransactionTagConnModel> TransactionTagConn { get; set; }
+        public virtual Currency Currency { get; set; }
+        public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
     }
 }

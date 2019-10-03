@@ -1,4 +1,17 @@
 ﻿
+
+
+Mentésnél mindig előjött egy generált TransactionId (régebben TransactionModelId), ami 'invalid column' volt.
+=>
+Meglévő db alapján model generálás
+https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx
+Valamilyen indítható app (nálam console app) legyen a Main Project. Ebben indítható a Scaffold.
+Áthelyeztem a generált fájlokat (Models/ és MoneyStatsContext.cs), ezeket használtam a régi context és model fájlok helyett.
+A hiba valójában az volt, hogy a generált modellekhez nem szabad plusz property-ket adni [NotMapped] attribútum nélkül! Ezzel az attribútummal kihagyja a mappelésből és működik.
+
+----------------------
+
+
 - kérjük le az utolsó tranzakció dátumát ([ACCOUNTING_DATE]) és jelezzük mindig látható helyen (pl. headerben). Fontos adat, hogy mennyire naprakész az alkalmazás.
 
 

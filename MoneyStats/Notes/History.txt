@@ -1,4 +1,8 @@
 ﻿
+
+https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx
+https://stackoverflow.com/questions/39454545/the-term-scaffold-dbcontext-is-not-recognized-as-the-name-of-a-cmdlet-functio
+
 https://github.com/aspnet/EntityFrameworkCore/issues/10576
 Search: SqlException: Invalid column name ModelId
 

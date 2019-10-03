@@ -138,7 +138,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 
             return new Transaction()
             {
-                Id = this.newTransactionId--,
+                //Id = default(int),
                 Account = tr.Account,
                 AccountName = tr.AccountName,
                 AccountingDate = tr.AccountingDate,
@@ -151,7 +151,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 Tags = tags,
                 Currency = new Currency()
                 {
-                    Id = this.newTransactionId--,
+                    //Id = this.newTransactionId--,
                     Name = tr.Currency,
                     CreateDate = DateTime.Now,
                     State = "T"

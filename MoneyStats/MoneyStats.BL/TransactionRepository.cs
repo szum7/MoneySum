@@ -157,6 +157,9 @@ namespace MoneyStats.BL
                 var ttcToBeSaved = new List<TransactionTagConn>();
                 foreach (var transaction in transactionsToBeSaved)
                 {
+                    if (transaction.Tags == null)
+                        continue;
+
                     foreach (var tag in transaction.Tags)
                     {
                         ttcToBeSaved.Add(new TransactionTagConn()

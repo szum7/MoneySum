@@ -100,6 +100,9 @@ namespace MoneyStats.BL
                 var tagsToBeSaved = new List<TagModel>();
                 foreach (var item in transactionsToBeSaved)
                 {
+                    if (item.Tags == null)
+                        continue;
+
                     foreach (var tag in item.Tags)
                     {
                         if (!tagDict.ContainsKey(tag.Title))

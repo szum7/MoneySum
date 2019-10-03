@@ -69,7 +69,9 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 
             foreach (var item in list)
             {
-                if (!dict.ContainsKey(item.TagGroupId) && item.TagNames.Count > 0)
+                if (!String.IsNullOrWhiteSpace(item.TagGroupId) && 
+                    !dict.ContainsKey(item.TagGroupId) && 
+                    item.TagNames.Count > 0)
                 {
                     dict.Add(item.TagGroupId, item.TagNames);
                 }

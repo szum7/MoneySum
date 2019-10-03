@@ -60,7 +60,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 
         public List<Transaction> GetNewRows(List<Transaction> list)
         {
-            return list.Where(x => x.Id == -1).ToList();
+            return list.Where(x => x.Id < 1).ToList();
         }
 
         Dictionary<string, List<string>> GetTagGroupDictionary(List<ExcelTransactionExtended> list)
@@ -152,8 +152,12 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 Currency = new Currency()
                 {
                     Id = this.newTransactionId--,
-                    Name = tr.Currency
-                }
+                    Name = tr.Currency,
+                    CreateDate = DateTime.Now,
+                    State = "T"
+                },
+                CreateDate = DateTime.Now,
+                State = "T"
             };
         }
     }

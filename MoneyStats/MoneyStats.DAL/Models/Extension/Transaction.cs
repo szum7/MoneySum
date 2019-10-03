@@ -9,12 +9,6 @@ namespace MoneyStats.DAL.Models
         [NotMapped]
         public List<Tag> Tags { get; set; }
 
-        public Transaction()
-        {
-            this.TransactionTagConn = new HashSet<TransactionTagConn>();
-            this.Tags = new List<Tag>();
-        }
-
         [NotMapped]
         public string ContentId
         {
@@ -24,6 +18,12 @@ namespace MoneyStats.DAL.Models
                 string currency = Currency != null ? Currency.Name : "";
                 return $"{AccountingDate.ToString()}{TransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{sum}{currency}{Message}";
             }
+        }
+
+        public Transaction()
+        {
+            this.TransactionTagConn = new HashSet<TransactionTagConn>();
+            this.Tags = new List<Tag>();
         }
     }
 }

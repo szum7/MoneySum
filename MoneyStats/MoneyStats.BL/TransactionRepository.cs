@@ -105,13 +105,15 @@ namespace MoneyStats.BL
 
                     foreach (var tag in item.Tags)
                     {
-                        if (!tagDict.ContainsKey(tag.Title))
+                        if (!tagDict.ContainsKey(tag.Title) && 
+                            !tagsToBeSaved.Any(t => t.Title == tag.Title))
                         {
                             tagsToBeSaved.Add(new Tag()
                             {
                                 Title = tag.Title,
                                 CreateBy = -1, // TODO get user id
-                                CreateDate = DateTime.Now
+                                CreateDate = DateTime.Now,
+                                State = "T"
                             });
                         }
                     }
@@ -145,6 +147,7 @@ namespace MoneyStats.BL
                 foreach (var transaction in transactionsToBeSaved)
                 {
                     transaction.CurrencyId = currencyDict[transaction.Currency.Name];
+                    transaction.Currency = null; // Unset since we do not want to save a new Currency (again)
                 }
 
                 // Save transactions

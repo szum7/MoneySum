@@ -13,7 +13,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
     /// <summary>
     /// Read file to memory
     /// </summary>
-    class ExcelReader<T> where T : Transaction, new()
+    class ExcelReader<T> where T : ExcelTransaction, new()
     {
         ExcelSheet<T> sheet;
         ConsoleWatch watch;
@@ -130,9 +130,9 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     if (row.GetCell(8) != null) tr.Currency =       row.GetCell(8).ToString();
                     if (row.GetCell(9) != null) tr.Message =        row.GetCell(9).ToString();
 
-                    if (tr is TransactionExtended)
+                    if (tr is ExcelTransactionExtended)
                     {
-                        TransactionExtended cast = tr as TransactionExtended;
+                        ExcelTransactionExtended cast = tr as ExcelTransactionExtended;
 
                         if (row.GetCell(10) != null) cast.IsOmitted =   row.GetCell(10).ToString() == "1";
                         if (row.GetCell(11) != null) cast.GroupId =     row.GetCell(11).ToString();

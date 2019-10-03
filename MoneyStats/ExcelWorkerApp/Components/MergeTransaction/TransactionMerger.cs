@@ -9,7 +9,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 {
     class TransactionMerger
     {
-        public List<TransactionModel> Run(List<TransactionModel> tr1, List<TransactionExtended> tr2)
+        public List<TransactionModel> Run(List<TransactionModel> tr1, List<ExcelTransactionExtended> tr2)
         {
             // Order by date
             tr1.OrderBy(x => x.AccountingDate);
@@ -63,7 +63,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return list.Where(x => x.Id == -1);
         }
 
-        Dictionary<string, List<string>> GetTagGroupDictionary(List<TransactionExtended> list)
+        Dictionary<string, List<string>> GetTagGroupDictionary(List<ExcelTransactionExtended> list)
         {
             var dict = new Dictionary<string, List<string>>();
 
@@ -80,7 +80,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return dict;
         }
 
-        List<TagModel> GetTagModelListByTagGroupId(TransactionExtended transaction, Dictionary<string, List<string>> tagGroupDict)
+        List<TagModel> GetTagModelListByTagGroupId(ExcelTransactionExtended transaction, Dictionary<string, List<string>> tagGroupDict)
         {
             var tags = new List<TagModel>();
             if (tagGroupDict == null || tagGroupDict.Count == 0)
@@ -106,7 +106,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return tags.Count > 0 ? tags : null;
         }
 
-        List<TagModel> GetTagModelList(TransactionExtended transaction)
+        List<TagModel> GetTagModelList(ExcelTransactionExtended transaction)
         {
             var tags = new List<TagModel>();
             foreach (var item in transaction.TagNames)
@@ -120,7 +120,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return tags.Count > 0 ? tags : null;
         }
 
-        TransactionModel ConvertToModel(TransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
+        TransactionModel ConvertToModel(ExcelTransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
         {
             List<TagModel> tags = null;
             if (String.IsNullOrWhiteSpace(tr.GroupId))

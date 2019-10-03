@@ -1,4 +1,8 @@
-﻿https://stackoverflow.com/questions/1881123/table-naming-underscore-vs-camelcase-namespaces-singular-vs-plural
+﻿
+https://github.com/aspnet/EntityFrameworkCore/issues/10576
+Search: SqlException: Invalid column name ModelId
+
+https://stackoverflow.com/questions/1881123/table-naming-underscore-vs-camelcase-namespaces-singular-vs-plural
 https://www.w3schools.com/sql/sql_datatypes.asp
 https://stackoverflow.com/questions/11222968/best-type-for-id-column-in-sql-server-2008
 

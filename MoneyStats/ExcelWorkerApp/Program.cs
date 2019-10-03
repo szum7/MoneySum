@@ -11,9 +11,9 @@ namespace ExcelWorkerApp
     {
         static void Main(string[] args)
         {
-            var excelReader = new ExcelReader<Transaction>();
+            var excelReader = new ExcelReader<ExcelTransaction>();
             var transactionRepo = new TransactionRepository();
-            var mergedFileReader = new ExcelReader<TransactionExtended>();
+            var mergedFileReader = new ExcelReader<ExcelTransactionExtended>();
             var transactionMerger = new TransactionMerger();
 
 

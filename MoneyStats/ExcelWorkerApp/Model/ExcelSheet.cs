@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ExcelWorkerApp.Model
 {
-    class ExcelSheet<T> where T : Transaction, new()
+    class ExcelSheet<T> where T : ExcelTransaction, new()
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -2,7 +2,7 @@
 
 namespace ExcelWorkerApp.Model
 {
-    public class Transaction
+    public class ExcelTransaction
     {
         public int Id { get; set; }
         public int Number { get { return this.Id; } set { this.Id = value; } }
@@ -26,7 +26,7 @@ namespace ExcelWorkerApp.Model
             }
         }
 
-        public bool IsTheSame(Transaction other)
+        public bool IsTheSame(ExcelTransaction other)
         {
             if (other == null)
                 return false;

@@ -23,7 +23,7 @@ namespace ExcelWorkerApp.Components.WriteExcel
             this.watch = new ConsoleWatch(this.GetType().Name);
         }
 
-        public void Run(ExcelSheet<Transaction> excelData, string filePath, bool isCreateExtendedHeader = true)
+        public void Run(ExcelSheet<ExcelTransaction> excelData, string filePath, bool isCreateExtendedHeader = true)
         {
             this.watch.PrintTime($"STARTED.");
 

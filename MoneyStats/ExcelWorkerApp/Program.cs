@@ -24,23 +24,23 @@ namespace ExcelWorkerApp
 #endif
 
             // Read many bank-exported excel files
-#if true
+#if false
             ExcelSheet<Transaction> allFiles = excelReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
 #endif
 
             // Merge read files
-#if true
+#if false
             excelReader.TruncateData();
 #endif
 
             // Write merged file to an excel file
-#if true
+#if false
             ExcelWriter excelWriter = new ExcelWriter();
             excelWriter.Run(allFiles, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
 
             // => User edits the file
-#if true
+#if false
             Console.WriteLine("========================");
             Console.WriteLine("USER INTERACTION NEEDED!");
             Console.WriteLine("========================");

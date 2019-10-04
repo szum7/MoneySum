@@ -2,30 +2,37 @@
 using ExcelWorkerApp.Components.ReadExcel;
 using ExcelWorkerApp.Components.WriteExcel;
 using ExcelWorkerApp.Model;
+using ExcelWorkerApp.Test;
 using MoneyStats.BL;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ExcelWorkerApp
 {
+
     class Program
     {
+        
+
         static void Main(string[] args)
         {
             var excelReader = new ExcelReader<ExcelTransaction>();
+            var excelWriter = new ExcelWriter();
             var transactionRepo = new TransactionRepository();
             var mergedFileReader = new ExcelReader<ExcelTransactionExtended>();
             var transactionMerger = new TransactionMerger();
 
 
             // Test section
-#if false
-            var list = transactionRepo.GetWithEntities();
+#if true
+            var list = (new MergeTest()).MergeTestMethod();
             return;
 #endif
 
             // Read many bank-exported excel files
 #if false
-            ExcelSheet<Transaction> allFiles = excelReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
+            ExcelSheet<ExcelTransaction> allFiles = excelReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
 #endif
 
             // Merge read files
@@ -35,7 +42,6 @@ namespace ExcelWorkerApp
 
             // Write merged file to an excel file
 #if false
-            ExcelWriter excelWriter = new ExcelWriter();
             excelWriter.Run(allFiles, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
 
@@ -71,6 +77,7 @@ namespace ExcelWorkerApp
             // Merge db data and merged-excel file data
 #if true            
             var mergedList = transactionMerger.Run(transactionsFromDB, mergedFile.Transactions);
+            excelWriter.Run(mergedList, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\MergedList.xls");
             var unsavedTransactionList = transactionMerger.GetNewRows(mergedList);
 #endif
 

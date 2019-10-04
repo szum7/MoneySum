@@ -62,8 +62,6 @@ namespace ExcelWorkerApp.Test
                         }
                         i++;
                     }
-                    i++;
-                    j++;
                 }
             }
             while (i < tr1.Count)

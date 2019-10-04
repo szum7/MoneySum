@@ -5,16 +5,11 @@ using ExcelWorkerApp.Model;
 using ExcelWorkerApp.Test;
 using MoneyStats.BL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ExcelWorkerApp
 {
-
     class Program
     {
-        
-
         static void Main(string[] args)
         {
             var excelReader = new ExcelReader<ExcelTransaction>();

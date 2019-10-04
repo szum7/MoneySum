@@ -22,7 +22,7 @@ namespace ExcelWorkerApp.Model
         {
             get
             {
-                return $"{AccountingDate.ToString()}{TransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum.ToString()}{Currency}{Message}";
+                return $"{AccountingDate.ToString()}{TransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum.ToString("0.00")}{Currency}{Message}";
             }
         }
 

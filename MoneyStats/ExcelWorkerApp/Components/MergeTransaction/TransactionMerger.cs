@@ -12,8 +12,8 @@ namespace ExcelWorkerApp.Components.MergeTransaction
         public List<Transaction> Run(List<Transaction> tr1, List<ExcelTransactionExtended> tr2)
         {
             // Order by date
-            tr1.OrderBy(x => x.AccountingDate);
-            tr2.OrderBy(x => x.AccountingDate);
+            tr1 = tr1.OrderBy(x => x.AccountingDate).ToList();
+            tr2 = tr2.OrderBy(x => x.AccountingDate).ToList();
 
             var groupDict = this.GetTagGroupDictionary(tr2);
 
@@ -34,13 +34,80 @@ namespace ExcelWorkerApp.Components.MergeTransaction
                 }
                 else
                 {
-                    merged.Add(tr1[i]);
-                    if (tr1[i].ContentId != tr2[j].ContentId)
+                    while (i < tr1.Count && j < tr2.Count && tr1[i].AccountingDate == tr2[j].AccountingDate)
                     {
-                        merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                        if (!merged.Any(x => x.ContentId == tr1[i].ContentId))
+                        {
+                            merged.Add(tr1[i]);
+                        }
+                        if (tr1[i].ContentId != tr2[j].ContentId)
+                        {
+                            if (!merged.Any(x => x.ContentId == tr2[j].ContentId))
+                            {
+                                merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                            }
+                            j++;
+                        }
+                        i++;
                     }
-                    i++;
-                    j++;
+
+
+                    //var bool1 = !merged.Any(x => x.ContentId == tr1[i].ContentId);
+                    //var bool2 = !merged.Any(x => x.ContentId == tr2[j].ContentId);
+                    //if (bool1)
+                    //{
+                    //    merged.Add(tr1[i]);
+                    //}
+                    //if (bool2)
+                    //{
+                    //    merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                    //}
+                    //if (!bool1 && !bool2)
+                    //{
+
+                    //}
+
+
+                    //var find = tr2.Find(x => x.ContentId == tr1[i].ContentId);
+
+
+                    //var a = i;
+                    //while (a < tr1.Count
+                    //    && tr1[a].AccountingDate == tr1[i].AccountingDate
+                    //    && tr1[a].ContentId != tr2[j].ContentId)
+                    //{
+                    //    a++;
+                    //}
+                    //if (a >= tr1.Count ||  
+                    //    tr1[a].AccountingDate != tr1[i].AccountingDate) // nem talált egyelőt a tartomány jobb részén
+                    //{
+                    //    a = i;
+                    //    while (a >= 0
+                    //    && tr1[a].AccountingDate == tr1[i].AccountingDate
+                    //    && tr1[a].ContentId != tr2[j].ContentId)
+                    //    {
+                    //        a--;
+                    //    }
+
+                    //    if (a < 0 ||
+                    //        tr1[a].AccountingDate != tr1[i].AccountingDate) // nem talált egyelőt a tartományban bal részén
+                    //    {
+                    //        merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                    //    }
+                    //}
+
+
+
+                    //if (tr1[i].ContentId != tr2[j].ContentId)
+                    //{
+                    //    merged.Add(this.ConvertToModel(tr2[j], groupDict));
+                    //}
+                    //else
+                    //{
+
+                    //}
+                    //i++;
+                    //j++;
 
                 }
             }

@@ -7,6 +7,7 @@ using NPOI.HSSF.UserModel;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using MoneyStats.DAL.Models;
 
 namespace ExcelWorkerApp.Components.WriteExcel
 {
@@ -21,6 +22,28 @@ namespace ExcelWorkerApp.Components.WriteExcel
         public ExcelWriter()
         {
             this.watch = new ConsoleWatch(this.GetType().Name);
+        }
+
+        public void Run(List<Transaction> dbData, string filePath, bool isCreateExtendedHeader = true)
+        {
+            var data = new ExcelSheet<ExcelTransaction>();
+            foreach (var item in dbData)
+            {
+                data.Transactions.Add(new ExcelTransactionExtended()
+                {
+                    AccountingDate = item.AccountingDate,
+                    TransactionId = item.TransactionId,
+                    Type = item.Type,
+                    Account = item.Account,
+                    AccountName = item.AccountName,
+                    PartnerAccount = item.PartnerAccount,
+                    PartnerName = item.PartnerName,
+                    Sum = (double)item.Sum.Value,
+                    Currency = item.Currency.Name,
+                    Message = item.Message
+                });
+            }
+            this.Run(data, filePath, isCreateExtendedHeader);
         }
 
         public void Run(ExcelSheet<ExcelTransaction> excelData, string filePath, bool isCreateExtendedHeader = true)

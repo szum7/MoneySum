@@ -20,7 +20,7 @@ namespace ExcelWorkerApp
 
 
             // Test section
-#if true
+#if false
             var list = (new MergeTest()).MergeTestMethod();
             return;
 #endif

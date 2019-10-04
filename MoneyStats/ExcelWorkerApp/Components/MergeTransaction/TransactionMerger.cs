@@ -9,6 +9,8 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 {
     class TransactionMerger
     {
+        int newTagId = -1;
+
         public List<Transaction> Run(List<Transaction> tr1, List<ExcelTransactionExtended> tr2)
         {
             tr1 = tr1.OrderBy(x => x.AccountingDate).ToList();
@@ -69,7 +71,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 
         public List<Transaction> GetNewRows(List<Transaction> list)
         {
-            return list.Where(x => x.Id < 1).ToList();
+            return list.Where(x => x.Id <= 0).ToList();
         }
 
         Dictionary<string, List<string>> GetTagGroupDictionary(List<ExcelTransactionExtended> list)
@@ -88,8 +90,6 @@ namespace ExcelWorkerApp.Components.MergeTransaction
 
             return dict;
         }
-
-        int newTagId = -1;
 
         List<Tag> GetTagModelListByTagGroupId(ExcelTransactionExtended transaction, Dictionary<string, List<string>> tagGroupDict)
         {
@@ -131,11 +131,9 @@ namespace ExcelWorkerApp.Components.MergeTransaction
             return tags.Count > 0 ? tags : null;
         }
 
-        int newTransactionId = -1;
-
         Transaction ConvertToModel(ExcelTransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
         {
-            List<Tag> tags = null;
+            List<Tag> tags;
             if (String.IsNullOrWhiteSpace(tr.GroupId))
             {
                 tags = this.GetTagModelList(tr);

@@ -97,7 +97,8 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     i = sheet.FirstRowNum + 1;
                 }
 
-                while ((IsReadFromTheBeginning && i <= sheet.LastRowNum) || (!IsReadFromTheBeginning && i > (sheet.FirstRowNum + 1)))
+                while ((IsReadFromTheBeginning && i <= sheet.LastRowNum) // from the beginning
+                    || (!IsReadFromTheBeginning && i >= (sheet.FirstRowNum + 1))) // from end
                 {
                     IRow row = sheet.GetRow(i);
                     if (row == null)

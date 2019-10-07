@@ -15,28 +15,28 @@ namespace ExcelWorkerApp.Components.ReadExcel
     /// </summary>
     class ExcelReader<T> where T : ExcelTransaction, new()
     {
-        ExcelSheet<T> sheet;
         ConsoleWatch watch;
 
         public bool IsReadFromTheBeginning { get; set; }
 
         public ExcelReader()
         {
-            this.sheet = new ExcelSheet<T>();
             this.watch = new ConsoleWatch(this.GetType().Name);
         }
 
         public ExcelSheet<T> Read(string filePath)
         {
             this.watch.PrintTime($"STARTED.");
-            this.ReadExcel(filePath, 1);
+            var sheet = new ExcelSheet<T>();
+            this.ReadExcel(filePath, 1, sheet);
             this.watch.PrintDiff($"Document read. DONE.");
-            return this.sheet;
+            return sheet;
         }
 
         public ExcelSheet<T> Read(string folderPath, string filePattern)
         {
             this.watch.PrintTime($"STARTED.");
+            var sheet = new ExcelSheet<T>();
             List<string> filePaths = this.InitFilePaths(folderPath, filePattern);
             this.watch.PrintDiff($"Paths read. File count: {filePaths.Count}");
 
@@ -44,12 +44,12 @@ namespace ExcelWorkerApp.Components.ReadExcel
             int rowId = 1;
             foreach (string path in filePaths)
             {
-                rowId = this.ReadExcel(path, rowId);
+                rowId = this.ReadExcel(path, rowId, sheet);
                 documentRead++;
                 this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead > 1 ? "" : "s")} read.");
             }
             this.watch.PrintDiff($"All documents read. DONE.\n");
-            return this.sheet;
+            return sheet;
         }
 
         List<string> InitFilePaths(string folderPath, string filePattern)
@@ -59,7 +59,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return filePaths;
         }
 
-        int ReadExcel(string path, int rowId)
+        int ReadExcel(string path, int rowId, ExcelSheet<T> excelSheet)
         {
             ISheet sheet;
 
@@ -77,7 +77,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
                 }
 
-                if (this.sheet.IsHeaderEmpty())
+                if (excelSheet.IsHeaderEmpty())
                 {
                     IRow headerRow = sheet.GetRow(0);
                     int cellCount = headerRow.LastCellNum;
@@ -87,7 +87,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                         if (cell == null || string.IsNullOrWhiteSpace(cell.ToString()))
                             continue;
 
-                        this.sheet.Header.Add(cell.ToString());
+                        excelSheet.Header.Add(cell.ToString());
                     }
                 }
 
@@ -141,7 +141,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                         if (row.GetCell(13) != null) cast.TagGroupId =  row.GetCell(13).ToString();
                     }
 
-                    this.sheet.AddNewRow(tr);
+                    excelSheet.AddNewRow(tr);
 
                     rowId++;
 
@@ -176,11 +176,11 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return list;
         }
 
-        public void TruncateData()
+        public void TruncateData(ExcelSheet<T> excelSheet)
         {
             this.watch.PrintTime($"STARTED {this.GetType().Name}");
-            int truncatedRowCount = this.sheet.Truncate();
-            this.watch.PrintDiff($"FINISHED. {truncatedRowCount} truncated rows, {this.sheet.Transactions.Count} remaining.\n");
+            int truncatedRowCount = excelSheet.Truncate();
+            this.watch.PrintDiff($"FINISHED. {truncatedRowCount} truncated rows, {excelSheet.Transactions.Count} remaining.\n");
         }
     }
 }

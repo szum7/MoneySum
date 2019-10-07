@@ -26,22 +26,22 @@ namespace ExcelWorkerApp
 #endif
 
             // Read many bank-exported excel files
-#if false
+#if true
             ExcelSheet<ExcelTransaction> allFiles = excelReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
 #endif
 
             // Merge read files
-#if false
-            excelReader.TruncateData();
+#if true
+            excelReader.TruncateData(allFiles);
 #endif
 
             // Write merged file to an excel file
-#if false
+#if true
             excelWriter.Run(allFiles, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
 
             // => User edits the file
-#if false
+#if true
             Console.WriteLine("========================");
             Console.WriteLine("USER INTERACTION NEEDED!");
             Console.WriteLine("========================");
@@ -59,7 +59,7 @@ namespace ExcelWorkerApp
 #endif
 
             // Read one merged excel file
-#if true            
+#if true
             mergedFileReader.IsReadFromTheBeginning = true;
             var mergedFile = mergedFileReader.Read(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
 #endif
@@ -70,7 +70,7 @@ namespace ExcelWorkerApp
 #endif
 
             // Merge db data and merged-excel file data
-#if true            
+#if true
             var mergedList = transactionMerger.Run(transactionsFromDB, mergedFile.Transactions);
             excelWriter.Run(mergedList, @"C:\Users\Aron_Szocs\Documents\Bank\Merged\MergedList.xls");
             var unsavedTransactionList = transactionMerger.GetNewRows(mergedList);

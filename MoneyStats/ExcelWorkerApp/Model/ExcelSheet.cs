@@ -1,5 +1,6 @@
 ﻿using ExcelWorkerApp.Model;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ExcelWorkerApp.Model
@@ -48,17 +49,21 @@ namespace ExcelWorkerApp.Model
             var tmp = new ExcelSheet<T>();
 
             DateTime? maxDate = null;
-            string lastContentId = null;
             int truncatedRowCount = 0;
             foreach (var item in this.Transactions)
             {
-                if ((!maxDate.HasValue) ||
-                    (item.AccountingDate > maxDate) ||
-                    (item.AccountingDate == maxDate && (lastContentId == null || lastContentId != item.ContentId)))
+                if (!maxDate.HasValue ||
+                    item.AccountingDate >= maxDate.Value)
                 {
-                    tmp.AddNewRow(item);
-
-                    lastContentId = item.ContentId;
+                    var found = tmp.Transactions.Any(t => t.ContentId == item.ContentId);
+                    if (found)
+                    {
+                        truncatedRowCount++;
+                    }
+                    else
+                    {
+                        tmp.AddNewRow(item);
+                    }
                     maxDate = item.AccountingDate;
                 }
                 else

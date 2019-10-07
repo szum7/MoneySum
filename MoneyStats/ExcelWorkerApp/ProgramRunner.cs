@@ -49,7 +49,7 @@ namespace ExcelWorkerApp
             if (this.bankExportedTransactions == null || 
                 this.bankExportedTransactions.Transactions.Count == 0)
             {
-                Console.WriteLine("Transactions are empty!");
+                Console.WriteLine("[ALERT] Transactions are empty!");
                 return;
             }
             //@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls"

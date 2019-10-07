@@ -179,8 +179,9 @@ namespace ExcelWorkerApp.Components.ReadExcel
         public void TruncateData(ExcelSheet<T> excelSheet)
         {
             this.watch.PrintTime($"STARTED {this.GetType().Name}");
+            int originalCount = excelSheet.Transactions.Count;
             int truncatedRowCount = excelSheet.Truncate();
-            this.watch.PrintDiff($"FINISHED. {truncatedRowCount} truncated rows, {excelSheet.Transactions.Count} remaining.\n");
+            this.watch.PrintDiff($"FINISHED. {originalCount} - {truncatedRowCount} = {excelSheet.Transactions.Count} row(s) remaining.\n");
         }
     }
 }

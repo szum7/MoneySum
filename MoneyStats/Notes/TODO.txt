@@ -14,8 +14,9 @@ o duplikált sorok maradnak (pl.: 2016-05-31, 41,00 Ft). Vagy a beolvasás vagy 
 o nvarchar karakter kódolása legyen olyan, hogy megy bele "ő"
 o túl kevés trans._tag connection rekord van, valamit nem csinál meg
 o GroupId-t használni
-- lenullozni a partnerName, Type, stb.-t, különbeninkonzisztens lehet a ContentId
-- typeokat ellenőrizni a rendes merged fileban, tényleg levágja-e a szó végeket?
+o lenullozni a partnerName, Type, stb.-t, különbeninkonzisztens lehet a ContentId
+o typeokat ellenőrizni a rendes merged fileban, tényleg levágja-e a szó végeket?
+- kiszervezni az ExcelReaderből a groupId részt
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

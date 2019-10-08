@@ -201,15 +201,22 @@ namespace ExcelWorkerApp.Components.ReadExcel
                             }
                             else // GroupId is new
                             {
-                                cast.AccountingDate = endDate;
-                                cast.GroupId = groupId;
+                                var groupedTransaction = new ExcelTransactionExtended()
+                                {
+                                    AccountingDate = endDate,
+                                    Sum = cast.Sum,
+                                    Currency = cast.Currency,
+                                    GroupId = groupId,
+                                    TagNames = cast.TagNames,
+                                    TagGroupId = cast.TagGroupId
+                                };
 
-                                groupDict.Add(groupId, cast);
+                                groupDict.Add(groupId, groupedTransaction);
                             }
                         }
                         else
                         {
-                            excelSheet.AddNewRow(tr);
+                            excelSheet.AddNewRow(cast as T);
                             rowId++;
                         }
                     }

@@ -30,7 +30,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
             this.watch.PrintTime($"STARTED.");
             var sheet = new ExcelSheet<T>();
             var groupBuilder = new TransactionGroupBuilder();
-            this.ReadExcel(filePath, 1, sheet, groupBuilder);
+            this.ReadExcel(filePath, sheet, groupBuilder);
 
             // Remaining end-of-dates group
             if (typeof(ExcelTransactionExtended).IsAssignableFrom(typeof(T)))
@@ -53,11 +53,10 @@ namespace ExcelWorkerApp.Components.ReadExcel
             this.watch.PrintDiff($"Paths read. File count: {filePaths.Count}");
 
             int documentRead = 0;
-            int rowId = 1;
             var groupBuilder = new TransactionGroupBuilder();
             foreach (string path in filePaths)
             {
-                rowId = this.ReadExcel(path, rowId, sheet, groupBuilder);
+                this.ReadExcel(path, sheet, groupBuilder);
                 documentRead++;
                 this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead > 1 ? "" : "s")} read.");
             }
@@ -82,9 +81,8 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return filePaths;
         }
 
-        int ReadExcel(
+        void ReadExcel(
             string path, 
-            int rowId, 
             ExcelSheet<T> excelSheet,
             TransactionGroupBuilder groupBuilder)
         {
@@ -134,7 +132,6 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
                     T tr = new T();
 
-                    tr.Id = rowId;
                     if (row.GetCell(0) != null) tr.AccountingDate = row.GetCell(0).DateCellValue;
                     if (row.GetCell(1) != null) tr.TransactionId =  row.GetCell(1).ToString();
                     if (row.GetCell(2) != null) tr.Type =           row.GetCell(2).ToString();
@@ -162,19 +159,16 @@ namespace ExcelWorkerApp.Components.ReadExcel
                         else
                         {
                             excelSheet.AddNewRow(cast as T);
-                            rowId++;
                         }
                     }
                     else
                     {
                         excelSheet.AddNewRow(tr);
-                        rowId++;
                     }
 
                     i = this.GetNextIteration(i);
                 }
             }
-            return rowId;
         }
 
         #region ReadExcel parts

@@ -5,8 +5,6 @@ namespace ExcelWorkerApp.Model
     public class ExcelTransaction
     {
         public int Id { get; set; }
-        public int Number { get { return this.Id; } set { this.Id = value; } }
-
         public DateTime AccountingDate { get; set; }
         public string TransactionId { get; set; }
         public string Type { get; set; }

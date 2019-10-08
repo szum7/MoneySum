@@ -10,6 +10,9 @@ o bevezetni és használni az isOmitted-ed (tényleg hagyjuk ki, ami ki van hagy
 - transaction és currency-nél hibát okoz ha (negatív) Id-t adok, de Tag-nél meg kell? Ellenőrizni, tényleg kell-e tagnél!
 o duplikált sorok maradnak (pl.: 2016-05-31, 41,00 Ft). Vagy a beolvasás vagy a Truncate rossz.
 - Kezelni azt a helyzetet, amikor 2 tranzakció valóban ugyan azokkal a paraméterekkel létezik, és a ContentId nem jó, mint egyedi kulcs
+- Lehet lesz olyan eset, hogy bár adatbázisban benne van a rekord, de a merged excelben módosítottam a tag-ek listáját és új kapcsolatok kellenének. Legyen lehetőség ilyenre, a merged excel táblázat mindig írja fölül az adatbázist.
+- nvarchar karakter kódolása legyen olyan, hogy megy bele "ő"
+- túl kevés trans._tag connection rekord van, valamit nem csinál meg
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

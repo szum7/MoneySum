@@ -1,4 +1,7 @@
 ﻿
+https://stackoverflow.com/questions/22349424/highlight-active-row-column-in-excel-without-using-vba
+https://trumpexcel.com/highlight-active-row-column-excel/
+
 https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx
 https://stackoverflow.com/questions/39454545/the-term-scaffold-dbcontext-is-not-recognized-as-the-name-of-a-cmdlet-functio
 

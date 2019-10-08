@@ -1,4 +1,13 @@
-﻿
+﻿context.Database.ExecuteSqlCommand(ALTER TABLE [MyTable] ALTER COLUMN [IdentityColumn] IDENTITY (1000,1))
+DBCC CHECKIDENT (Currency, RESEED, 0)
+
+----------------------
+
+Scaffold, create model from existing database:
+Scaffold-DbContext "Server=.\SQLExpress;Database=MoneyStats;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext "Server=.\;Database=MoneyStats;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+----------------------
 
 
 Mentésnél mindig előjött egy generált TransactionId (régebben TransactionModelId), ami 'invalid column' volt.

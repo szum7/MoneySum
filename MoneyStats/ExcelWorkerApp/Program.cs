@@ -1,10 +1,4 @@
-﻿using ExcelWorkerApp.Components.MergeTransaction;
-using ExcelWorkerApp.Components.ReadExcel;
-using ExcelWorkerApp.Components.WriteExcel;
-using ExcelWorkerApp.Model;
-using ExcelWorkerApp.Test;
-using MoneyStats.BL;
-using System;
+﻿using System;
 
 namespace ExcelWorkerApp
 {
@@ -19,13 +13,14 @@ namespace ExcelWorkerApp
 #endif
 
             var run = new ProgramRunner();
+            var now = DateTime.Now.ToString("yyyy-MM-dd-H-mm-ss");
 
-            run.ReadManyBankExportedFiles(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
-            run.TruncateBankExportedFiles();
-            run.CreateMergedExcelFile(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
+            //run.ReadManyBankExportedFiles(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
+            //run.TruncateBankExportedFiles();
+            //run.CreateMergedExcelFile($@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged_{now}.xls");
 
             // => User edits the file
-#if true
+#if false
             Console.WriteLine("========================");
             Console.WriteLine("USER INTERACTION NEEDED!");
             Console.WriteLine("========================");
@@ -42,7 +37,7 @@ namespace ExcelWorkerApp
             }
 #endif
 
-            run.ReadExtendedTransactionsMergedFile(@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls");
+            run.ReadExtendedTransactionsMergedFile($@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged_{now}.xls");
             run.LoadAlreadyExistingTransactionsFromDatabase();
             run.MergeDatabaseAndExtendedMergedTransactions();
             run.SaveNewBankExportedTransactions();

@@ -50,7 +50,7 @@ namespace MoneyStats.DAL
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasMaxLength(1)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
             });
 
             modelBuilder.Entity<Setting>(entity =>
@@ -86,7 +86,7 @@ namespace MoneyStats.DAL
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasMaxLength(1)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Setting)
@@ -105,19 +105,19 @@ namespace MoneyStats.DAL
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasMaxLength(1)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(255)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
             });
 
             modelBuilder.Entity<Transaction>(entity =>
@@ -145,7 +145,7 @@ namespace MoneyStats.DAL
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasMaxLength(1)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Sum).HasColumnType("numeric(15, 2)");
 
@@ -191,7 +191,7 @@ namespace MoneyStats.DAL
                 entity.Property(e => e.State)
                     .IsRequired()
                     .HasMaxLength(1)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Username)
                     .IsRequired()

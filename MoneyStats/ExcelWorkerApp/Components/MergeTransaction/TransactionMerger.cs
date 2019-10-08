@@ -134,7 +134,7 @@ namespace ExcelWorkerApp.Components.MergeTransaction
         Transaction ConvertToModel(ExcelTransactionExtended tr, Dictionary<string, List<string>> tagGroupDict)
         {
             List<Tag> tags;
-            if (String.IsNullOrWhiteSpace(tr.GroupId))
+            if (String.IsNullOrWhiteSpace(tr.TagGroupId))
             {
                 tags = this.GetTagModelList(tr);
             }

@@ -133,7 +133,8 @@ namespace MoneyStats.BL
                 var currenciesToBeSaved = new List<Currency>();
                 foreach (var item in transactionsToBeSaved)
                 {
-                    if (!currencyDict.ContainsKey(item.Currency.Name))
+                    if (!currencyDict.ContainsKey(item.Currency.Name) && 
+                        !currenciesToBeSaved.Any(c => c.Name == item.Currency.Name))
                     {
                         currenciesToBeSaved.Add(item.Currency);
                     }

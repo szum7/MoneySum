@@ -29,13 +29,13 @@ namespace ExcelWorkerApp.Components.ReadExcel
         {
             this.watch.PrintTime($"STARTED.");
             var sheet = new ExcelSheet<T>();
-            var groupDict = new Dictionary<string, ExcelTransactionExtended>();
-            this.ReadExcel(filePath, 1, sheet, groupDict);
+            var groupBuilder = new TransactionGroupBuilder();
+            this.ReadExcel(filePath, 1, sheet, groupBuilder);
 
             // Remaining end-of-dates group
             if (typeof(ExcelTransactionExtended).IsAssignableFrom(typeof(T)))
             {
-                foreach (var keyValue in groupDict)
+                foreach (var keyValue in groupBuilder.GroupDict)
                 {
                     sheet.AddNewRow(keyValue.Value as T);
                 }
@@ -54,10 +54,10 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
             int documentRead = 0;
             int rowId = 1;
-            var groupDict = new Dictionary<string, ExcelTransactionExtended>();
+            var groupBuilder = new TransactionGroupBuilder();
             foreach (string path in filePaths)
             {
-                rowId = this.ReadExcel(path, rowId, sheet, groupDict);
+                rowId = this.ReadExcel(path, rowId, sheet, groupBuilder);
                 documentRead++;
                 this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead > 1 ? "" : "s")} read.");
             }
@@ -65,7 +65,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
             // Remaining end-of-dates group
             if (typeof(ExcelTransactionExtended).IsAssignableFrom(typeof(T)))
             {
-                foreach (var keyValue in groupDict)
+                foreach (var keyValue in groupBuilder.GroupDict)
                 {
                     sheet.AddNewRow(keyValue.Value as T);
                 }
@@ -90,8 +90,8 @@ namespace ExcelWorkerApp.Components.ReadExcel
         int ReadExcel(
             string path, 
             int rowId, 
-            ExcelSheet<T> excelSheet, 
-            Dictionary<string, ExcelTransactionExtended> groupDict)
+            ExcelSheet<T> excelSheet,
+            TransactionGroupBuilder groupBuilder)
         {
             ISheet sheet;
 
@@ -166,19 +166,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     if (tr is ExcelTransactionExtended)
                     {
                         // Add grouped transactions on previous dates
-                        var removeableKey = new List<string>();
-                        foreach (var keyValue in groupDict)
-                        {
-                            if (keyValue.Value.AccountingDate < tr.AccountingDate)
-                            {
-                                excelSheet.AddNewRow(keyValue.Value as T);
-                                removeableKey.Add(keyValue.Key);
-                            }
-                        }
-                        foreach (var keyValue in removeableKey)
-                        {
-                            groupDict.Remove(keyValue);
-                        }
+                        groupBuilder.AddPastDatedTransactions(excelSheet as ExcelSheet<ExcelTransactionExtended>, tr.AccountingDate);
 
                         ExcelTransactionExtended cast = tr as ExcelTransactionExtended;
 
@@ -188,31 +176,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                         if (row.GetCell(11) != null)
                         {
                             string groupId = row.GetCell(11).ToString();
-                            var endDate = this.GetEndDayDate(tr.AccountingDate);
-
-                            if (groupDict.ContainsKey(groupId)) // GroupId already exists
-                            {
-                                var item = groupDict[groupId];
-
-                                item.Sum += cast.Sum;
-                                item.GroupId = groupId;
-                                item.TagGroupId = cast.TagGroupId; // need to set it, since it may not already be set
-                                item.TagNames = cast.TagNames; // need to set it, since it may not already be set                                
-                            }
-                            else // GroupId is new
-                            {
-                                var groupedTransaction = new ExcelTransactionExtended()
-                                {
-                                    AccountingDate = endDate,
-                                    Sum = cast.Sum,
-                                    Currency = cast.Currency,
-                                    GroupId = groupId,
-                                    TagNames = cast.TagNames,
-                                    TagGroupId = cast.TagGroupId
-                                };
-
-                                groupDict.Add(groupId, groupedTransaction);
-                            }
+                            groupBuilder.StoreCurrentGroupedTransaction(cast, groupId);
                         }
                         else
                         {

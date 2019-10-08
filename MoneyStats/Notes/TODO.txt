@@ -11,8 +11,11 @@ o bevezetni és használni az isOmitted-ed (tényleg hagyjuk ki, ami ki van hagy
 o duplikált sorok maradnak (pl.: 2016-05-31, 41,00 Ft). Vagy a beolvasás vagy a Truncate rossz.
 - Kezelni azt a helyzetet, amikor 2 tranzakció valóban ugyan azokkal a paraméterekkel létezik, és a ContentId nem jó, mint egyedi kulcs
 - Lehet lesz olyan eset, hogy bár adatbázisban benne van a rekord, de a merged excelben módosítottam a tag-ek listáját és új kapcsolatok kellenének. Legyen lehetőség ilyenre, a merged excel táblázat mindig írja fölül az adatbázist.
-- nvarchar karakter kódolása legyen olyan, hogy megy bele "ő"
-- túl kevés trans._tag connection rekord van, valamit nem csinál meg
+o nvarchar karakter kódolása legyen olyan, hogy megy bele "ő"
+o túl kevés trans._tag connection rekord van, valamit nem csinál meg
+o GroupId-t használni
+- lenullozni a partnerName, Type, stb.-t, különbeninkonzisztens lehet a ContentId
+- typeokat ellenőrizni a rendes merged fileban, tényleg levágja-e a szó végeket?
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

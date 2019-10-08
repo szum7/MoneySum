@@ -1,5 +1,6 @@
 ﻿using ExcelWorkerApp.Model;
 using ExcelWorkerApp.Utility;
+using MoneyStats.DAL.Models;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -28,7 +29,18 @@ namespace ExcelWorkerApp.Components.ReadExcel
         {
             this.watch.PrintTime($"STARTED.");
             var sheet = new ExcelSheet<T>();
-            this.ReadExcel(filePath, 1, sheet);
+            var groupDict = new Dictionary<string, ExcelTransactionExtended>();
+            this.ReadExcel(filePath, 1, sheet, groupDict);
+
+            // Remaining end-of-dates group
+            if (typeof(ExcelTransactionExtended).IsAssignableFrom(typeof(T)))
+            {
+                foreach (var keyValue in groupDict)
+                {
+                    sheet.AddNewRow(keyValue.Value as T);
+                }
+            }
+
             this.watch.PrintDiff($"Document read. DONE.");
             return sheet;
         }
@@ -42,12 +54,23 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
             int documentRead = 0;
             int rowId = 1;
+            var groupDict = new Dictionary<string, ExcelTransactionExtended>();
             foreach (string path in filePaths)
             {
-                rowId = this.ReadExcel(path, rowId, sheet);
+                rowId = this.ReadExcel(path, rowId, sheet, groupDict);
                 documentRead++;
                 this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead > 1 ? "" : "s")} read.");
             }
+
+            // Remaining end-of-dates group
+            if (typeof(ExcelTransactionExtended).IsAssignableFrom(typeof(T)))
+            {
+                foreach (var keyValue in groupDict)
+                {
+                    sheet.AddNewRow(keyValue.Value as T);
+                }
+            }
+
             this.watch.PrintDiff($"All documents read. DONE.\n");
             return sheet;
         }
@@ -59,7 +82,16 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return filePaths;
         }
 
-        int ReadExcel(string path, int rowId, ExcelSheet<T> excelSheet)
+        DateTime GetEndDayDate(DateTime date)
+        {
+            return (new DateTime(date.Year, date.Month + 1, 1)).AddDays(-1);
+        }
+
+        int ReadExcel(
+            string path, 
+            int rowId, 
+            ExcelSheet<T> excelSheet, 
+            Dictionary<string, ExcelTransactionExtended> groupDict)
         {
             ISheet sheet;
 
@@ -111,7 +143,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                         i = this.GetNextIteration(i);
                         continue;
                     }
-                    if (row.GetCell(10) != null && row.GetCell(10).ToString() == "1")
+                    if (row.GetCell(10) != null && row.GetCell(10).ToString() == "1") // IsOmitted column
                     {
                         i = this.GetNextIteration(i);
                         continue;
@@ -133,17 +165,59 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
                     if (tr is ExcelTransactionExtended)
                     {
+                        // Add grouped transactions on previous dates
+                        var removeableKey = new List<string>();
+                        foreach (var keyValue in groupDict)
+                        {
+                            if (keyValue.Value.AccountingDate < tr.AccountingDate)
+                            {
+                                excelSheet.AddNewRow(keyValue.Value as T);
+                                removeableKey.Add(keyValue.Key);
+                            }
+                        }
+                        foreach (var keyValue in removeableKey)
+                        {
+                            groupDict.Remove(keyValue);
+                        }
+
                         ExcelTransactionExtended cast = tr as ExcelTransactionExtended;
 
-                        if (row.GetCell(10) != null) cast.IsOmitted =   row.GetCell(10).ToString() == "1";
-                        if (row.GetCell(11) != null) cast.GroupId =     row.GetCell(11).ToString();
                         if (row.GetCell(12) != null) cast.TagNames =    this.GetIntList(row.GetCell(12).ToString());
                         if (row.GetCell(13) != null) cast.TagGroupId =  row.GetCell(13).ToString();
+
+                        if (row.GetCell(11) != null)
+                        {
+                            string groupId = row.GetCell(11).ToString();
+                            var endDate = this.GetEndDayDate(tr.AccountingDate);
+
+                            if (groupDict.ContainsKey(groupId)) // GroupId already exists
+                            {
+                                var item = groupDict[groupId];
+
+                                item.Sum += cast.Sum;
+                                item.GroupId = groupId;
+                                item.TagGroupId = cast.TagGroupId; // need to set it, since it may not already be set
+                                item.TagNames = cast.TagNames; // need to set it, since it may not already be set                                
+                            }
+                            else // GroupId is new
+                            {
+                                cast.AccountingDate = endDate;
+                                cast.GroupId = groupId;
+
+                                groupDict.Add(groupId, cast);
+                            }
+                        }
+                        else
+                        {
+                            excelSheet.AddNewRow(tr);
+                            rowId++;
+                        }
                     }
-
-                    excelSheet.AddNewRow(tr);
-
-                    rowId++;
+                    else
+                    {
+                        excelSheet.AddNewRow(tr);
+                        rowId++;
+                    }
 
                     i = this.GetNextIteration(i);
                 }

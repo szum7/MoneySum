@@ -82,11 +82,6 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return filePaths;
         }
 
-        DateTime GetEndDayDate(DateTime date)
-        {
-            return (new DateTime(date.Year, date.Month + 1, 1)).AddDays(-1);
-        }
-
         int ReadExcel(
             string path, 
             int rowId, 
@@ -112,22 +107,10 @@ namespace ExcelWorkerApp.Components.ReadExcel
                 if (excelSheet.IsHeaderEmpty())
                 {
                     IRow headerRow = sheet.GetRow(0);
-                    int cellCount = headerRow.LastCellNum;
-                    for (int j = 0; j < cellCount; j++)
-                    {
-                        ICell cell = headerRow.GetCell(j);
-                        if (cell == null || string.IsNullOrWhiteSpace(cell.ToString()))
-                            continue;
-
-                        excelSheet.Header.Add(cell.ToString());
-                    }
+                    this.AddHeaderColumns(excelSheet, headerRow);
                 }
 
-                int i = sheet.LastRowNum;
-                if (IsReadFromTheBeginning)
-                {
-                    i = sheet.FirstRowNum + 1;
-                }
+                int i = this.GetStartingIndexValue(sheet);
 
                 while ((IsReadFromTheBeginning && i <= sheet.LastRowNum) // from the beginning
                     || (!IsReadFromTheBeginning && i >= (sheet.FirstRowNum + 1))) // from end
@@ -165,14 +148,12 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
                     if (tr is ExcelTransactionExtended)
                     {
-                        // Add grouped transactions on previous dates
                         groupBuilder.AddPastDatedTransactions(excelSheet as ExcelSheet<ExcelTransactionExtended>, tr.AccountingDate);
 
                         ExcelTransactionExtended cast = tr as ExcelTransactionExtended;
 
                         if (row.GetCell(12) != null) cast.TagNames =    this.GetIntList(row.GetCell(12).ToString());
                         if (row.GetCell(13) != null) cast.TagGroupId =  row.GetCell(13).ToString();
-
                         if (row.GetCell(11) != null)
                         {
                             string groupId = row.GetCell(11).ToString();
@@ -194,6 +175,13 @@ namespace ExcelWorkerApp.Components.ReadExcel
                 }
             }
             return rowId;
+        }
+
+        #region ReadExcel parts
+
+        int GetStartingIndexValue(ISheet sheet)
+        {
+            return IsReadFromTheBeginning ? sheet.FirstRowNum + 1 : sheet.LastRowNum;
         }
 
         int GetNextIteration(int i)
@@ -220,6 +208,21 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
             return list;
         }
+
+        void AddHeaderColumns(ExcelSheet<T> excelSheet, IRow headerRow)
+        {
+            int cellCount = headerRow.LastCellNum;
+            for (int j = 0; j < cellCount; j++)
+            {
+                ICell cell = headerRow.GetCell(j);
+                if (cell == null || string.IsNullOrWhiteSpace(cell.ToString()))
+                    continue;
+
+                excelSheet.Header.Add(cell.ToString());
+            }
+        }
+
+        #endregion
 
         public void TruncateData(ExcelSheet<T> excelSheet)
         {

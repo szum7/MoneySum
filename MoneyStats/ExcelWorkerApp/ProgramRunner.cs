@@ -6,6 +6,7 @@ using MoneyStats.BL;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ExcelWorkerApp
@@ -41,6 +42,7 @@ namespace ExcelWorkerApp
 
         public void TruncateBankExportedFiles()
         {
+            this.bankExportedTransactions.Transactions = this.bankExportedTransactions.Transactions.OrderBy(t => t.AccountingDate).ToList();
             this.excelReader.TruncateData(this.bankExportedTransactions);
         }
 

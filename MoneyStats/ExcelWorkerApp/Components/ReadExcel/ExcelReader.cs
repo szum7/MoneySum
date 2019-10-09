@@ -14,7 +14,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
     /// <summary>
     /// Read file to memory
     /// </summary>
-    class ExcelReader<T> where T : ExcelTransaction, new()
+    public class ExcelReader<T> where T : ExcelTransaction, new()
     {
         ConsoleWatch watch;
 
@@ -81,6 +81,16 @@ namespace ExcelWorkerApp.Components.ReadExcel
             return filePaths;
         }
 
+        /// <summary>
+        /// Handles
+        /// - omit rows where IsOmitted=true
+        /// - group rows where GroupId is set
+        /// Doesn't handle 
+        /// - apply tags where TagGroupId is set
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="excelSheet"></param>
+        /// <param name="groupBuilder"></param>
         void ReadExcel(
             string path, 
             ExcelSheet<T> excelSheet,
@@ -133,15 +143,15 @@ namespace ExcelWorkerApp.Components.ReadExcel
                     T tr = new T();
 
                     if (row.GetCell(0) != null) tr.AccountingDate = row.GetCell(0).DateCellValue;
-                    if (row.GetCell(1) != null) tr.TransactionId =  row.GetCell(1).ToString();
-                    if (row.GetCell(2) != null) tr.Type =           row.GetCell(2).ToString();
-                    if (row.GetCell(3) != null) tr.Account =        row.GetCell(3).ToString();
-                    if (row.GetCell(4) != null) tr.AccountName =    row.GetCell(4).ToString();
-                    if (row.GetCell(5) != null) tr.PartnerAccount = row.GetCell(5).ToString();
-                    if (row.GetCell(6) != null) tr.PartnerName =    row.GetCell(6).ToString();
+                    if (row.GetCell(1) != null) tr.TransactionId =  row.GetCell(1).ToString().Trim();
+                    if (row.GetCell(2) != null) tr.Type =           row.GetCell(2).ToString().Trim();
+                    if (row.GetCell(3) != null) tr.Account =        row.GetCell(3).ToString().Trim();
+                    if (row.GetCell(4) != null) tr.AccountName =    row.GetCell(4).ToString().Trim();
+                    if (row.GetCell(5) != null) tr.PartnerAccount = row.GetCell(5).ToString().Trim();
+                    if (row.GetCell(6) != null) tr.PartnerName =    row.GetCell(6).ToString().Trim();
                     if (row.GetCell(7) != null) tr.Sum =            double.Parse(row.GetCell(7).ToString());
-                    if (row.GetCell(8) != null) tr.Currency =       row.GetCell(8).ToString();
-                    if (row.GetCell(9) != null) tr.Message =        row.GetCell(9).ToString();
+                    if (row.GetCell(8) != null) tr.Currency =       row.GetCell(8).ToString().Trim();
+                    if (row.GetCell(9) != null) tr.Message =        row.GetCell(9).ToString().Trim();
 
                     if (tr is ExcelTransactionExtended)
                     {
@@ -212,7 +222,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
                 if (cell == null || string.IsNullOrWhiteSpace(cell.ToString()))
                     continue;
 
-                excelSheet.Header.Add(cell.ToString());
+                excelSheet.Header.Add(cell.ToString().Trim());
             }
         }
 

@@ -1,4 +1,12 @@
 ﻿
+
+
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetEntryAssembly().CodeBase).LocalPath);
+            var pa = Directory.GetParent(path);
+
+
+
+
 int ReadExcel(
     string path, 
     int rowId, 

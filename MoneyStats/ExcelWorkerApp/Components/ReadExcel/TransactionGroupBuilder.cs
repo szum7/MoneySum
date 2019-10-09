@@ -51,8 +51,14 @@ namespace ExcelWorkerApp.Components.ReadExcel
         {
             groupedTransaction.Sum += currentTransaction.Sum;
             groupedTransaction.GroupId = groupId;
-            groupedTransaction.TagGroupId = currentTransaction.TagGroupId; // need to set it, since it may not already be set
-            groupedTransaction.TagNames = currentTransaction.TagNames; // need to set it, since it may not already be set
+            if (!String.IsNullOrWhiteSpace(currentTransaction.TagGroupId))
+            {
+                groupedTransaction.TagGroupId = currentTransaction.TagGroupId; // need to set it, since it may not already be set
+            }
+            if (currentTransaction.TagNames != null && currentTransaction.TagNames.Count > 0)
+            {
+                groupedTransaction.TagNames = currentTransaction.TagNames; // need to set it, since it may not already be set
+            }
         }
 
         ExcelTransactionExtended GetNewGroupedTransaction(string groupId, ExcelTransactionExtended currentTransaction, DateTime endDate)

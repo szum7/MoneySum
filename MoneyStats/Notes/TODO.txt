@@ -17,6 +17,7 @@ o GroupId-t használni
 o lenullozni a partnerName, Type, stb.-t, különbeninkonzisztens lehet a ContentId
 o typeokat ellenőrizni a rendes merged fileban, tényleg levágja-e a szó végeket?
 - kiszervezni az ExcelReaderből a groupId részt
+- read rows as is -> omit omitted -> truncate -> apply tags -> group
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

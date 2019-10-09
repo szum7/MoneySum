@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.DAL", "MoneyStat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelWorkerApp", "ExcelWorkerApp\ExcelWorkerApp.csproj", "{6C10E636-0BBC-47D2-9ECF-F76C9D64340F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyStats.BL", "MoneyStats.BL\MoneyStats.BL.csproj", "{ED6D2C23-DFDF-455D-8FA2-1D015605300B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.BL", "MoneyStats.BL\MoneyStats.BL.csproj", "{ED6D2C23-DFDF-455D-8FA2-1D015605300B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyStats.Tests", "MoneyStats.Tests\MoneyStats.Tests.csproj", "{DA38DB83-A010-47D4-85F3-7DBEF99AFFB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{ED6D2C23-DFDF-455D-8FA2-1D015605300B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED6D2C23-DFDF-455D-8FA2-1D015605300B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED6D2C23-DFDF-455D-8FA2-1D015605300B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA38DB83-A010-47D4-85F3-7DBEF99AFFB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA38DB83-A010-47D4-85F3-7DBEF99AFFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA38DB83-A010-47D4-85F3-7DBEF99AFFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA38DB83-A010-47D4-85F3-7DBEF99AFFB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

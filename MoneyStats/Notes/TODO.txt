@@ -20,6 +20,8 @@ o typeokat ellenőrizni a rendes merged fileban, tényleg levágja-e a szó vég
 - read rows as is -> omit omitted -> truncate -> apply tags -> group
 o ApplyGroups-ban TransactionGroupBuilder-t használni
 - TransactionGroupBuilder-nek valami jobb helyet találni, mint Utility (lehet mást is át kell szervezni)
+- transaction lista
+- melyik tag-re mennyi bevétel/kiadás
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

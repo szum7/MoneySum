@@ -33,6 +33,15 @@ namespace MoneyStats.BL
             }
         }
 
+        public Dictionary<int, Tag> GetIdKeyedDictionary()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                return (from d in context.Tag
+                        select new { d, d.Id }).ToDictionary(k => k.Id, v => v.d);
+            }
+        }
+
         public void Save(List<Tag> tags)
         {
             using (var context = new MoneyStatsContext())

@@ -34,9 +34,6 @@ namespace MoneyStats.BL
         {
             using (var context = new MoneyStatsContext())
             {
-                var tagsRepo = new TagRepository();
-                var tags = tagsRepo.Get();
-
                 var transactions = (
                     from d in context.Transaction
                     select new Transaction()
@@ -58,18 +55,17 @@ namespace MoneyStats.BL
                     .ToList();
 
                 // Associate tags
-                //foreach (var transaction in transactions)
-                //{
-                //    foreach (var tranTagConn in transaction.TransactionTagConn)
-                //    {
-                //        var tag = tags.SingleOrDefault(x => x.Id == tranTagConn.TagId);
-                //        if (tag != null)
-                //        {
-                //            transaction.Tags.Add(tag);
-                //        }
-                //    }
-                //}
-
+                var tags = (new TagRepository()).GetIdKeyedDictionary();
+                foreach (var transaction in transactions)
+                {
+                    foreach (var tranTagConn in transaction.TransactionTagConn)
+                    {
+                        if (tags.ContainsKey(tranTagConn.TagId))
+                        {
+                            transaction.Tags.Add(tags[tranTagConn.TagId]);
+                        }
+                    }
+                }
 
                 return transactions;
             }

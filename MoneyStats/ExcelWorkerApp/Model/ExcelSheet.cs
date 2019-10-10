@@ -46,7 +46,7 @@ namespace ExcelWorkerApp.Model
 
         public int Truncate()
         {
-            var tmp = new ExcelSheet<T>();
+            var tmp = new List<T>();
 
             DateTime? maxDate = null;
             int truncatedRowCount = 0;
@@ -55,14 +55,14 @@ namespace ExcelWorkerApp.Model
                 if (!maxDate.HasValue ||
                     item.AccountingDate >= maxDate.Value)
                 {
-                    var found = tmp.Transactions.Any(t => t.ContentId == item.ContentId);
+                    var found = tmp.Any(t => t.ContentId == item.ContentId);
                     if (found)
                     {
                         truncatedRowCount++;
                     }
                     else
                     {
-                        tmp.AddNewRow(item);
+                        tmp.Add(item);
                     }
                     maxDate = item.AccountingDate;
                 }
@@ -72,7 +72,7 @@ namespace ExcelWorkerApp.Model
                 }
             }
 
-            this.Transactions = tmp.Transactions;
+            this.Transactions = tmp;
             return truncatedRowCount;
         }
     }

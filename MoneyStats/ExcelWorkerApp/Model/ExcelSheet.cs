@@ -2,6 +2,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using ExcelWorkerApp.Components.ReadExcel;
+using ExcelWorkerApp.Utility;
 
 namespace ExcelWorkerApp.Model
 {
@@ -141,48 +143,16 @@ namespace ExcelWorkerApp.Model
 
             var tmp = new List<ExcelTransactionExtended>();
             var castList = this.Transactions as List<ExcelTransactionExtended>;
-            var groupDict = new Dictionary<string, ExcelTransactionExtended>();
+            var groupBuilder = new TransactionGroupBuilder();
             foreach (var transaction in castList)
             {
                 // AddPastDatedTransactions
-                var removeableKey = new List<string>();
-                foreach (var keyValue in groupDict)
-                {
-                    if (keyValue.Value.AccountingDate < transaction.AccountingDate)
-                    {
-                        tmp.Add(keyValue.Value);
-                        removeableKey.Add(keyValue.Key);
-                    }
-                }
-                foreach (var keyValue in removeableKey)
-                {
-                    groupDict.Remove(keyValue);
-                }
+                groupBuilder.AddPastDatedTransactions(tmp, transaction.AccountingDate);
 
-                // StoreCurrentGroupedTransaction
                 if (!String.IsNullOrWhiteSpace(transaction.GroupId))
                 {
-                    var endDate = this.GetEndDayDate(transaction.AccountingDate);
-                    if (groupDict.ContainsKey(transaction.GroupId)) // GroupId already exists
-                    {
-                        var groupedTransaction = groupDict[transaction.GroupId];
-
-                        // SetGroupedTransaction
-                        groupedTransaction.Sum += transaction.Sum;
-                    }
-                    else // GroupId is new
-                    {
-                        var newGroupedTransaction = new ExcelTransactionExtended()
-                        {
-                            AccountingDate = endDate,
-                            Sum = transaction.Sum,
-                            Currency = transaction.Currency,
-                            GroupId = transaction.GroupId,
-                            TagNames = transaction.TagNames,
-                            TagGroupId = transaction.TagGroupId
-                        };
-                        groupDict.Add(transaction.GroupId, newGroupedTransaction);
-                    }
+                    // StoreCurrentGroupedTransaction
+                    groupBuilder.StoreCurrentGroupedTransaction(transaction, transaction.GroupId);
                 }
                 else
                 {
@@ -191,18 +161,13 @@ namespace ExcelWorkerApp.Model
             }
 
             // Remaining end-of-dates group
-            foreach (var keyValue in groupDict)
+            foreach (var keyValue in groupBuilder.GroupDict)
             {
                 tmp.Add(keyValue.Value);
             }
 
             this.Transactions = tmp as List<T>;
             return this;
-        }
-
-        DateTime GetEndDayDate(DateTime date)
-        {
-            return (new DateTime(date.Year, date.Month + 1, 1)).AddDays(-1);
         }
     }
 }

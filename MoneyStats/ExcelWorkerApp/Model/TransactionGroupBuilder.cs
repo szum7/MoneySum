@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExcelWorkerApp.Utility
+namespace ExcelWorkerApp.Model
 {
     class TransactionGroupBuilder
     {

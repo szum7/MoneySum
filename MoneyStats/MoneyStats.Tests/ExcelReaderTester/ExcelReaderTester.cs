@@ -12,62 +12,6 @@ namespace MoneyStats.Tests.ExcelReaderTesters
     [TestClass]
     public class ExcelReaderTester
     {
-        class TestObject
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
-
-        [TestMethod]
-        public void TestTestEqual()
-        {
-            // Arrange
-            var o1 = new List<TestObject>()
-            {
-                new TestObject() { Id = 200, Name = "ab" },
-                new TestObject() { Id = 500, Name = "ba" },
-                new TestObject() { Id = 132, Name = "op" }
-            };
-            var o2 = new List<TestObject>()
-            {
-                new TestObject() { Id = 200, Name = "ab" },
-                new TestObject() { Id = 500, Name = "ba" },
-                new TestObject() { Id = 132, Name = "op" }
-            };
-
-            // Act
-            var str1 = JsonConvert.SerializeObject(o1);
-            var str2 = JsonConvert.SerializeObject(o2);
-
-            // Assert
-            Assert.AreEqual(str1, str2);
-        }
-
-        [TestMethod]
-        public void TestTestNotEqual()
-        {
-            // Arrange
-            var o1 = new List<TestObject>()
-            {
-                new TestObject() { Id = 200, Name = "ab" },
-                new TestObject() { Id = 500, Name = "bX" },
-                new TestObject() { Id = 132, Name = "op" }
-            };
-            var o2 = new List<TestObject>()
-            {
-                new TestObject() { Id = 200, Name = "ab" },
-                new TestObject() { Id = 500, Name = "ba" },
-                new TestObject() { Id = 132, Name = "op" }
-            };
-
-            // Act
-            var str1 = JsonConvert.SerializeObject(o1);
-            var str2 = JsonConvert.SerializeObject(o2);
-
-            // Assert
-            Assert.AreNotEqual(str1, str2);
-        }
-
         [TestMethod]
         public void TestMergedFileRead()
         {

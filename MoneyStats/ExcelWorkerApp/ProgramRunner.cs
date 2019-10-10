@@ -63,6 +63,10 @@ namespace ExcelWorkerApp
             mergedFileReader.IsReadFromTheBeginning = true;
             // @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls"
             this.extendedMergedTransactions = this.mergedFileReader.Read(fullFilePath);
+            this.extendedMergedTransactions
+                .RemoveOmittedRows()
+                .ApplyTagsToTagGroups()
+                .ApplyGroups();
         }
 
         public void LoadAlreadyExistingTransactionsFromDatabase()

@@ -1,6 +1,7 @@
 <body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
+  <app-nav></app-nav>
+  <div>
     <router-outlet></router-outlet>
+    <app-loadingscreen-component *ngIf="loadingScreen.loading"></app-loadingscreen-component>
   </div>
 </body>

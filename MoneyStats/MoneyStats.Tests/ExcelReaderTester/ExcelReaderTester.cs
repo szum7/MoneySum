@@ -69,7 +69,7 @@ namespace MoneyStats.Tests.ExcelReaderTesters
         }
 
         [TestMethod]
-        public void Test1()
+        public void TestMergedFileRead()
         {
             // Arrange
             var reader = new ExcelReader<ExcelTransactionExtended>();
@@ -84,7 +84,7 @@ namespace MoneyStats.Tests.ExcelReaderTesters
             result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2011, 2, 18), TransactionId = "tr-az-11", Type = "tí-11", Account = "kö-szá-11", AccountName = "kö-szá-el-11", PartnerAccount = "pa-szá-11", PartnerName = "pa-el-11", Sum = 110, Currency = "HUF", Message = "kö-11", GroupId = null, TagNames = new List<string>() { "a", "b" }, TagGroupId = null });
             result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2011, 2, 28), TransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 170, Currency = "HUF", Message = null, GroupId = "1", TagNames = new List<string>() { "a", "b", "c" }, TagGroupId = "1" });
             result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2011, 2, 28), TransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 100, Currency = "HUF", Message = null, GroupId = "2", TagNames = new List<string>(), TagGroupId = null });
-            result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2011, 3, 31), TransactionId = "tr-az-13", Type = "tí-13", Account = "kö-szá-13", AccountName = "kö-szá-el-13", PartnerAccount = "pa-szá-13", PartnerName = "pa-el-13", Sum = 10, Currency = "HUF", Message = "kö-13", GroupId = null, TagNames = new List<string>() { "g" }, TagGroupId = "2" });
+            result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2011, 3, 31), TransactionId = "tr-az-13", Type = "tí-13", Account = "kö-szá-13", AccountName = "kö-szá-el-13", PartnerAccount = "pa-szá-13", PartnerName = "pa-el-13", Sum = 130, Currency = "HUF", Message = "kö-13", GroupId = null, TagNames = new List<string>() { "g" }, TagGroupId = "2" });
             result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2011, 3, 31), TransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 120, Currency = "HUF", Message = null, GroupId = "1", TagNames = new List<string>() { "a", "b", "c" }, TagGroupId = "1" });
             result.Transactions.Add(new ExcelTransactionExtended() { AccountingDate = new DateTime(2016, 6, 30), TransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 200, Currency = "HUF", Message = null, GroupId = "2", TagNames = new List<string>(), TagGroupId = null });
             #endregion
@@ -92,12 +92,9 @@ namespace MoneyStats.Tests.ExcelReaderTesters
             // Act
             reader.IsReadFromTheBeginning = true;
 
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            path = Directory.GetParent(path).FullName;
-            path = Directory.GetParent(path).FullName;
-            path = Directory.GetParent(path).FullName;
-            path = Directory.GetParent(path).FullName;
+            var path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
             var excelSheet = reader.Read($@"{path}\ExcelReaderTester\Files\ExelReaderTestFile.xlsx");
+            excelSheet.RemoveOmittedRows().ApplyTagsToTagGroups().ApplyGroups();
             var str1 = JsonConvert.SerializeObject(excelSheet);
             var str2 = JsonConvert.SerializeObject(result);
 

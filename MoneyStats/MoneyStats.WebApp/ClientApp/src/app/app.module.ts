@@ -4,12 +4,13 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { HttpClientModule } from '@angular/common/http';
-import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 
 // Components
 import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
+import { NavNarrowComponent } from './components/nav-narrow/nav-narrow.component';
 
 // Pages
 import { HomePage } from './pages/home-page/home.page';
@@ -26,6 +27,7 @@ import { BaseHttpService } from './services/base-http.service';
     // Components
     AppComponent,
     NavComponent,
+    NavNarrowComponent,
     LoadingScreenComponent,
     // Pages
     HomePage,
@@ -50,6 +52,9 @@ import { BaseHttpService } from './services/base-http.service';
 })
 export class AppModule { 
   constructor() {
-    library.add(faInfoCircle);
+      library.add(faInfoCircle);
+      library.add(faCog);
+      library.add(faAlignJustify);
+      library.add(faTag);
   }
 }

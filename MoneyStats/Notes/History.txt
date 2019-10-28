@@ -1,4 +1,7 @@
 ﻿
+
+https://www.c-sharpcorner.com/article/create-sql-server-database-project-with-visual-studio/
+
 https://stackoverflow.com/questions/50930144/netcore-2-angular-5-error-staticinjectorerrorappmodulebase-url
 
 https://stackoverflow.com/questions/22349424/highlight-active-row-column-in-excel-without-using-vba

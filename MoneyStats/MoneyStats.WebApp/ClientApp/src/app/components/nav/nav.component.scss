@@ -9,6 +9,7 @@
   font-size: 16px;
   font-weight: bold;
   color: rgba(255,255,255,.25);
+  margin-left:15px;
 }
 
 .navbar-nav > li > .dropdown-menu {
@@ -66,5 +67,22 @@
   .navbar-expand-lg .navbar-nav .nav-link {
     padding-right: .7rem;
     padding-left: .7rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar.navbar-dark .navbar-toggler,
+  .navbar.navbar-dark .navbar-toggler:active {
+    border: none;
+  }
+
+  .navbar-dark .navbar-nav .nav-link{
+    padding-left:15px;
+  }
+
+  ul.navbar-nav {
+    border-top: 1px solid #16181a;
+    padding-top:5px;
+    padding-bottom:10px;
   }
 }

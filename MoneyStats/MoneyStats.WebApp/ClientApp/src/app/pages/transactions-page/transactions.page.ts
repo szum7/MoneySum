@@ -2,20 +2,74 @@ import { Component } from '@angular/core';
 import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
 
 @Component({
-  selector: 'app-transactions-page',
-  templateUrl: './transactions.page.html',
-  styleUrls: ['./transactions.page.scss']
+    selector: 'app-transactions-page',
+    templateUrl: './transactions.page.html',
+    styleUrls: ['./transactions.page.scss']
 })
 export class TransactionsPage {
 
-  constructor(private transactionService: TransactionService) {
-  }
+    transactions: Array<any>;
+    groupedTransactions: Array<any>;
 
-  getTransactions(): void {
-    this.transactionService.get().subscribe((response) => {
-      console.log(response);
-    }, (error) => {
-      console.log(error);
-    });
-  }
+    constructor(private transactionService: TransactionService) {
+    }
+
+    clickGetTransactions() {
+        this.program();
+    }
+
+    private program() {
+        let self = this;
+        this.getTransactions(function (response) {
+            self.transactions = response;
+            self.processTransactionsToPage();
+        }, function (error) {
+            console.log(error);
+        });
+    }
+
+    private processTransactionsToPage() {
+        if (this.transactions == null || this.transactions.length == 0) {
+            return;
+        }
+
+        this.groupedTransactions = this.groupArray(this.transactions, 'accountingDate');
+        this.sortArrayByDate(this.groupedTransactions, 'date');
+
+        console.log(this.groupedTransactions);
+    }
+
+    private getTransactions(successCallback: Function, errorCallback: Function): void {
+        this.transactionService.get().subscribe((response) => {
+            successCallback(response);
+        }, (error) => {
+            errorCallback(error);
+        });
+    }
+
+    private sortArrayByDate(arr: Array<any>, property: string) {
+        arr.sort(function (a, b) {
+            let d1: Date = new Date(a[property]);
+            let d2: Date = new Date(b[property]);
+            return d1.getTime() - d2.getTime();
+        });
+    }
+
+    private groupArray(arr: Array<any>, property: string): Array<any> {
+        let i = 0, val, index, values = [], ret = [];
+        for (; i < arr.length; i++) {
+            val = arr[i][property];
+            index = values.indexOf(val);
+            if (index > -1)
+                ret[index].transactions.push(arr[i]);
+            else {
+                values.push(val);
+                ret.push({
+                    'date': val,
+                    'transactions': [arr[i]]
+                });
+            }
+        }
+        return ret;
+    }
 }

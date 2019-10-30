@@ -28,6 +28,54 @@ export class TransactionsPage {
         });
     }
 
+    private getAllDatesArray(arr: Array<any>, key: string): Array<any> {
+
+        let minDate: Date = new Date(arr[0][key]),
+            maxDate: Date = new Date(arr[arr.length - 1][key]),
+            allDates: Array<Date> = this.getDatesBetweenDates(minDate, maxDate),
+            merged: Array<any> = [],
+            i: number = 0,
+            j: number = 0;
+
+        while (i < arr.length && j < allDates.length) {
+
+            let date = new Date(arr[i][key]);
+            if (date.getTime() < allDates[j].getTime()) {
+                merged.push(arr[i]);
+            } else if (date.getTime() > allDates[j].getTime()) {
+                merged.push({
+                    'date': allDates[j].toJSON(),
+                    'transactions': []
+                });
+                j++;
+            } else {
+                merged.push(arr[i]);
+                i++;
+                j++;
+            }
+        }
+        while (i < arr.length) {
+            merged.push(arr[i]);
+            i++;
+        }
+        return merged;
+    }
+
+    private getDatesBetweenDates(startDate: Date, endDate: Date): Array<Date> {
+        var dates = [],
+            currentDate = startDate,
+            addDays = function (days) {
+                var date = new Date(this.valueOf());
+                date.setDate(date.getDate() + days);
+                return date;
+            };
+        while (currentDate <= endDate) {
+            dates.push(currentDate);
+            currentDate = addDays.call(currentDate, 1);
+        }
+        return dates;
+    }
+
     private processTransactionsToPage() {
         if (this.transactions == null || this.transactions.length == 0) {
             return;
@@ -35,8 +83,6 @@ export class TransactionsPage {
 
         this.groupedTransactions = this.groupArray(this.transactions, 'accountingDate');
         this.sortArrayByDate(this.groupedTransactions, 'date');
-
-        console.log(this.groupedTransactions);
     }
 
     private getTransactions(successCallback: Function, errorCallback: Function): void {

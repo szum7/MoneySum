@@ -1,1 +1,14 @@
-<button (click)="clickGetTransactions()">Get transactions</button>
+<div class="root-transactions">
+  <div *ngFor="let dateGroup of groupedTransactions">
+    <div class="header-date">{{dateGroup.date}}</div>
+    <table class="body-records">
+      <tr *ngFor="let transaction of dateGroup.transactions">
+        <td class="content-sum">{{transaction.sum}}</td>
+        <td>
+          <span class="tag" *ngFor="let tag of transaction.tags">{{tag.title}}</span>
+          <span class="no-tag" *ngIf="transaction.tags.length == 0"><i>No tags.</i></span>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

@@ -12,9 +12,6 @@ export class TransactionsPage {
     groupedTransactions: Array<any>;
 
     constructor(private transactionService: TransactionService) {
-    }
-
-    clickGetTransactions() {
         this.program();
     }
 
@@ -23,6 +20,7 @@ export class TransactionsPage {
         this.getTransactions(function (response) {
             self.transactions = response;
             self.processTransactionsToPage();
+            console.log(self.groupedTransactions);
         }, function (error) {
             console.log(error);
         });
@@ -86,7 +84,7 @@ export class TransactionsPage {
     }
 
     private getTransactions(successCallback: Function, errorCallback: Function): void {
-        this.transactionService.get().subscribe((response) => {
+        this.transactionService.getWithEntities().subscribe((response) => {
             successCallback(response);
         }, (error) => {
             errorCallback(error);

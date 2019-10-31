@@ -23,5 +23,11 @@ namespace MoneyStats.WebApp.Controllers
         {
             return Ok(this.repo.Get());
         }
+
+        [HttpGet("getwithentities")]
+        public ActionResult GetWithEntities()
+        {
+            return Ok(this.repo.GetWithEntities());
+        }
     }
 }

@@ -32,4 +32,10 @@ export class TransactionService extends TransactionServiceLogic {
         .pipe(map(this.extractTransactions));
     }
 
+    getWithEntities(): Observable<any> { // Array<Transaction>
+        return this.http
+            .get<any>(this.baseUrl + 'api/Transaction/getwithentities')
+            .pipe(map(this.extractTransactions));
+    }
+
 }

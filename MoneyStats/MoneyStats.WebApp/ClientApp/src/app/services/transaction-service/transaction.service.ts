@@ -7,8 +7,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 class TransactionServiceMap {
-    protected extractTransactions(response: any): any {
+
+    protected extractNone(response: any): any {
         return response;
+    }
+
+    protected extractTransactions(response: any): any {
+        // TODO
+        return null;
     }
 }
 
@@ -28,14 +34,20 @@ export class TransactionService extends TransactionServiceLogic {
 
     get(): Observable<any> { // Array<Transaction>
         return this.http
-        .get<any>(this.baseUrl + 'api/Transaction/get')
-        .pipe(map(this.extractTransactions));
+            .get<any>(this.baseUrl + 'api/Transaction/get')
+            .pipe(map(this.extractNone));
     }
 
     getWithEntities(): Observable<any> { // Array<Transaction>
         return this.http
             .get<any>(this.baseUrl + 'api/Transaction/getwithentities')
-            .pipe(map(this.extractTransactions));
+            .pipe(map(this.extractNone));
+    }
+
+    getTransactionStats(): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + 'api/Transaction/gettransactionstats')
+            .pipe(map(this.extractNone));
     }
 
 }

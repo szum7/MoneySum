@@ -10,6 +10,7 @@ export class TransactionsPage {
 
     transactions: Array<any>;
     groupedTransactions: Array<any>;
+    monthStats: Array<any>;
 
     constructor(private transactionService: TransactionService) {
         this.program();
@@ -17,8 +18,10 @@ export class TransactionsPage {
 
     private program() {
         let self = this;
-        this.getTransactions(function (response) {
-            self.transactions = response;
+        this.getTransactionStats(function (response) {
+            console.log(response);
+            self.transactions = response.transactions;
+            self.monthStats = response.monthStats;
             self.processTransactionsToPage();
             console.log(self.groupedTransactions);
         }, function (error) {
@@ -83,8 +86,8 @@ export class TransactionsPage {
         this.sortArrayByDate(this.groupedTransactions, 'date');
     }
 
-    private getTransactions(successCallback: Function, errorCallback: Function): void {
-        this.transactionService.getWithEntities().subscribe((response) => {
+    private getTransactionStats(successCallback: Function, errorCallback: Function): void {
+        this.transactionService.getTransactionStats().subscribe((response) => {
             successCallback(response);
         }, (error) => {
             errorCallback(error);

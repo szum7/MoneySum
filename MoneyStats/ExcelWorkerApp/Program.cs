@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyStats.BL;
+using System;
 
 namespace ExcelWorkerApp
 {
@@ -7,17 +8,20 @@ namespace ExcelWorkerApp
         static void Main(string[] args)
         {
             // Test section
-#if false
-            var list = (new MergeTest()).MergeTestMethod();
+#if true
+            var list = (new TransactionRepository()).Get();
             return;
 #endif
 
             var run = new ProgramRunner();
-            var now = DateTime.Now.ToString("yyyy-MM-dd-H-mm-ss");
+            var now = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+            var nowString = "2019-11-03-8-52-36";
 
-            //run.ReadManyBankExportedFiles(@"C:\Users\Aron_Szocs\Documents\Bank", "*.xls");
-            //run.TruncateBankExportedFiles();
-            //run.CreateMergedExcelFile($@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged_{now}.xls");
+#if false
+            run.ReadManyBankExportedFiles(@"C:\Users\Shy\Documents\Ego\AllDocs\bank", "*.xls");
+            run.TruncateBankExportedFiles();
+            run.CreateMergedExcelFile($@"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\Merged_{nowString}.xls");
+#endif
 
             // => User edits the file
 #if false
@@ -37,10 +41,12 @@ namespace ExcelWorkerApp
             }
 #endif
 
-            run.ReadExtendedTransactionsMergedFile($@"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged_{now}.xls");
+#if true
+            run.ReadExtendedTransactionsMergedFile($@"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\Merged_{nowString}.xls");
             run.LoadAlreadyExistingTransactionsFromDatabase();
             run.MergeDatabaseAndExtendedMergedTransactions();
             run.SaveNewBankExportedTransactions();
+#endif
 
             Console.WriteLine("PROGRAM ENDED.");
         }

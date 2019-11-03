@@ -3,6 +3,7 @@ using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoneyStats.BL.Model;
 
 namespace MoneyStats.BL
 {
@@ -36,6 +37,7 @@ namespace MoneyStats.BL
             {
                 var transactions = (
                     from d in context.Transaction
+                    orderby d.AccountingDate ascending
                     select new Transaction()
                     {
                         Id = d.Id,
@@ -70,7 +72,46 @@ namespace MoneyStats.BL
                 return transactions;
             }
         }
-        
+
+        public TransactionStat GetTransactionStats()
+        {
+            // TODO test this
+            var transactions = this.GetWithEntities();
+            var transactionStat = new TransactionStat();
+
+            transactionStat.Transactions = transactions;
+
+            DateTime? currentDate = null;
+            foreach (var transaction in transactions)
+            {
+                if (!currentDate.HasValue || currentDate.Value.Month != transaction.AccountingDate.Month)
+                {
+                    currentDate = transaction.AccountingDate;
+
+                    transactionStat.MonthStats.Add(new MonthStat()
+                    {
+                        Date = new DateTime(currentDate.Value.Year, currentDate.Value.Month, 1),
+                        Expense = (transaction.Sum < 0 ? transaction.Sum.Value : 0),
+                        Income = (transaction.Sum > 0 ? transaction.Sum.Value : 0)
+                    });
+                }
+                else
+                {
+                    var lastStat = transactionStat.MonthStats.Last();
+                    if (transaction.Sum < 0)
+                    {
+                        lastStat.Expense += transaction.Sum;
+                    }
+                    else if (transaction.Sum > 0)
+                    {
+                        lastStat.Income += transaction.Sum;
+                    }                    
+                }
+            }
+
+            return transactionStat;
+        }
+
         public void Save(List<Transaction> transactions)
         {
             using (var context = new MoneyStatsContext())

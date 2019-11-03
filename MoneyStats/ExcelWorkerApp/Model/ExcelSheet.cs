@@ -93,7 +93,7 @@ namespace ExcelWorkerApp.Model
                 }
             }
 
-            Console.WriteLine($"Removed {this.Transactions.Count - tmp.Count} row(s).");
+            Console.WriteLine($"Removed {this.Transactions.Count - tmp.Count} 'omitted' row(s).");
 
             this.Transactions = tmp as List<T>;
 

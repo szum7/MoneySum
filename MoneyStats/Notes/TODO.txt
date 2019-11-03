@@ -1,11 +1,15 @@
-﻿- ellenőrizni, miért 130 rekord lett 131-ből? (headerrel együtt 131?)
+﻿
+- havi csoportosítás (fejléc év-hónap, alatta tételek, láblécben inc.-exp.-flow)
+- tag csoportosítás
+
+o ellenőrizni, miért 130 rekord lett 131-ből? (headerrel együtt 131?)
 o átváltani nem-determinisztikus tagelésre. Az excelben megírt tag NEVEK határozzák meg mi van az adatbázisban, nem fordítva. Ha van egy tag név, ami még nem szerepel, akkor azt felveszi a rendszer.
 o add TagGroupId -> pl egy tranzakció: digi, -2500, monthly,bill,DIGI -> TagGroupId=1. A következő ilyen tranzakciónál már csak a TagGroupId-t kell rárakni, nem kell az összes megnevezés.
 o read from beginning or end kapcsoló bevezetése
 o tesztelni, hogy az elejétől olvasásnál jó-e a végfeltétel (IsReadFromTheBeginning && i < sheet.LastRowNum)
 - TransactionModel.ContentId tudjon megegyezni a Transaction.ContentId-vel (ne különbözzön az egyes paraméterek ToString-je)
 o bevezetni és használni az isOmitted-ed (tényleg hagyjuk ki, ami ki van hagyva)
-- nem jó a merge, 130 + 2 included rowból 132 lesz (130 kéne maradjon)
+o nem jó a merge, 130 + 2 included rowból 132 lesz (130 kéne maradjon)
 - (?)minus id növelést és elérést kezelni és kiszervezni valami értelmes helyre
 - transaction és currency-nél hibát okoz ha (negatív) Id-t adok, de Tag-nél meg kell? Ellenőrizni, tényleg kell-e tagnél!
 o duplikált sorok maradnak (pl.: 2016-05-31, 41,00 Ft). Vagy a beolvasás vagy a Truncate rossz.
@@ -17,11 +21,10 @@ o GroupId-t használni
 o lenullozni a partnerName, Type, stb.-t, különbeninkonzisztens lehet a ContentId
 o typeokat ellenőrizni a rendes merged fileban, tényleg levágja-e a szó végeket?
 - kiszervezni az ExcelReaderből a groupId részt
-- read rows as is -> omit omitted -> truncate -> apply tags -> group
+o read rows as is -> omit omitted -> truncate -> apply tags -> group
 o ApplyGroups-ban TransactionGroupBuilder-t használni
-- TransactionGroupBuilder-nek valami jobb helyet találni, mint Utility (lehet mást is át kell szervezni)
-- transaction lista
-- melyik tag-re mennyi bevétel/kiadás
+o TransactionGroupBuilder-nek valami jobb helyet találni, mint Utility (lehet mást is át kell szervezni)
+o transaction lista
 
 CHECKS
 - check if all TagGroupId-TagNames is unique

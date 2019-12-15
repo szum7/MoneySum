@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MoneyStats.BL.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoneyStats.BL
 {
@@ -211,6 +212,15 @@ namespace MoneyStats.BL
                 // Save transaction-tag connections
                 var tranTagConnRepo = new TransactionTagConnRepository();
                 tranTagConnRepo.Save(ttcToBeSaved);
+            }
+        }
+
+        public void DeleteAll()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                context.Database.ExecuteSqlCommand("delete from dbo.[Transaction];DBCC CHECKIDENT ([Transaction], RESEED, 0);");
+                context.SaveChanges();
             }
         }
     }

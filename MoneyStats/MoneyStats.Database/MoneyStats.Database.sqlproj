@@ -64,4 +64,7 @@
     <None Include="SetupScripts\DeleteRecords.sql" />
     <None Include="SetupScripts\InsertExamples.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="User.sql" />
+  </ItemGroup>
 </Project>

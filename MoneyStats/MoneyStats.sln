@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notes", "Notes\Notes.csproj", "{D54DEABE-9197-459D-B77F-6DF728DD68D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelWorker", "ExcelWorker\ExcelWorker.csproj", "{EC9DC244-765F-4931-9DD5-4DB9C0F10820}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.DAL", "MoneyStats.DAL\MoneyStats.DAL.csproj", "{B7A532F7-E997-4E25-B9DE-DB138E3A400D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelWorkerApp", "ExcelWorkerApp\ExcelWorkerApp.csproj", "{6C10E636-0BBC-47D2-9ECF-F76C9D64340F}"
@@ -29,10 +27,6 @@ Global
 		{D54DEABE-9197-459D-B77F-6DF728DD68D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D54DEABE-9197-459D-B77F-6DF728DD68D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D54DEABE-9197-459D-B77F-6DF728DD68D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC9DC244-765F-4931-9DD5-4DB9C0F10820}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7A532F7-E997-4E25-B9DE-DB138E3A400D}.Release|Any CPU.ActiveCfg = Release|Any CPU

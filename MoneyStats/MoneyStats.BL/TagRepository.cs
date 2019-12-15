@@ -50,5 +50,14 @@ namespace MoneyStats.BL
                 context.SaveChanges();
             }
         }
+
+        public void DeleteAll()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                context.Database.ExecuteSqlCommand("delete from dbo.[Tag];DBCC CHECKIDENT ([Tag], RESEED, 0);");
+                context.SaveChanges();
+            }
+        }
     }
 }

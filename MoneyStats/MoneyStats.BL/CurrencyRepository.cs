@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using MoneyStats.DAL;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoneyStats.BL
 {
@@ -36,6 +37,15 @@ namespace MoneyStats.BL
             using (var context = new MoneyStatsContext())
             {
                 context.Currency.AddRange(currencies);
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteAll()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                context.Database.ExecuteSqlCommand("delete from dbo.[Currency];DBCC CHECKIDENT ([Currency], RESEED, 0);");
                 context.SaveChanges();
             }
         }

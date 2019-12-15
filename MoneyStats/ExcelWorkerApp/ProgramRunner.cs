@@ -85,5 +85,27 @@ namespace ExcelWorkerApp
         {
             this.transactionRepo.SmartSave(this.unsavedTransactionList);
         }
+
+        public void SaveBankExportedTransactions()
+        {
+            // Convert excel transactions to db transaction model.
+            // TODO - make the converting separate from the merger
+            List<Transaction> convertedExcelTransactions = transactionMerger.Run(new List<Transaction>(), extendedMergedTransactions.Transactions);
+
+            this.transactionRepo.SmartSave(convertedExcelTransactions);
+        }
+
+        public void ClearTransactionRelatedDataFromDatabase()
+        {
+            var transTagConnRepo = new TransactionTagConnRepository();
+            var transRepo = new TransactionRepository();
+            var tagRepo = new TagRepository();
+            var currencyRepo = new CurrencyRepository();
+
+            transTagConnRepo.DeleteAll();
+            transRepo.DeleteAll();
+            tagRepo.DeleteAll();
+            currencyRepo.DeleteAll();
+        }
     }
 }

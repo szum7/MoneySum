@@ -18,37 +18,17 @@ namespace ExcelWorkerApp.Components.WriteExcel
     class ExcelWriter
     {
         ConsoleWatch watch;
+        const string NAME = "ExcelWriter";
 
         public ExcelWriter()
         {
-            this.watch = new ConsoleWatch(this.GetType().Name);
-        }
-
-        public void Run(List<Transaction> dbData, string filePath, bool isCreateExtendedHeader = true)
-        {
-            var data = new ExcelSheet<ExcelTransaction>();
-            foreach (var item in dbData)
-            {
-                data.Transactions.Add(new ExcelTransactionExtended()
-                {
-                    AccountingDate = item.AccountingDate,
-                    TransactionId = item.TransactionId,
-                    Type = item.Type,
-                    Account = item.Account,
-                    AccountName = item.AccountName,
-                    PartnerAccount = item.PartnerAccount,
-                    PartnerName = item.PartnerName,
-                    Sum = (double)item.Sum.Value,
-                    Currency = item.Currency.Name,
-                    Message = item.Message
-                });
-            }
-            this.Run(data, filePath, isCreateExtendedHeader);
+            this.watch = new ConsoleWatch(NAME);
         }
 
         public void Run(ExcelSheet<ExcelTransaction> excelData, string filePath, bool isCreateExtendedHeader = true)
         {
-            this.watch.PrintTime($"STARTED.");
+            this.watch.StartAll();
+            this.watch.PrintTime($"Started writing to excel.");
 
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
@@ -93,16 +73,25 @@ namespace ExcelWorkerApp.Components.WriteExcel
                     row.CreateCell(8).SetCellValue(item.Currency);
                     row.CreateCell(9).SetCellValue(item.Message);
 
-                    this.watch.PrintDiff($"{rowIndex}/{excelData.Transactions.Count} line(s) created.");
+                    this.watch.PrintDiff($"{rowIndex}/{excelData.Transactions.Count} line{(rowIndex == 1 ? "" : "s")} created.");
                     rowIndex++;
                 }
 
                 workbook.Write(fs);
                 this.watch.PrintDiff($"File saved.");
             }
-            this.watch.PrintTime($"DONE.\n");
+            this.watch.PrintTime($"Finished writing the excel file.\n");
+            this.watch.StopAll();
         }
 
+        [Obsolete]
+        public void Run(List<Transaction> dbData, string filePath, bool isCreateExtendedHeader = true)
+        {
+            var data = this.ConvertTransactionListToExcelSheet(dbData);
+            this.Run(data, filePath, isCreateExtendedHeader);
+        }
+
+        #region Run utilities
         ICell CreateStyledCell(IRow row, int columnIndex, ICellStyle style)
         {
             ICell cell = row.CreateCell(columnIndex);
@@ -132,5 +121,28 @@ namespace ExcelWorkerApp.Components.WriteExcel
                 }
             }
         }
+
+        ExcelSheet<ExcelTransaction> ConvertTransactionListToExcelSheet(List<Transaction> dbData)
+        {
+            var data = new ExcelSheet<ExcelTransaction>();
+            foreach (var item in dbData)
+            {
+                data.Transactions.Add(new ExcelTransactionExtended()
+                {
+                    AccountingDate = item.AccountingDate,
+                    TransactionId = item.TransactionId,
+                    Type = item.Type,
+                    Account = item.Account,
+                    AccountName = item.AccountName,
+                    PartnerAccount = item.PartnerAccount,
+                    PartnerName = item.PartnerName,
+                    Sum = (double)item.Sum.Value,
+                    Currency = item.Currency.Name,
+                    Message = item.Message
+                });
+            }
+            return data;
+        }
+        #endregion
     }
 }

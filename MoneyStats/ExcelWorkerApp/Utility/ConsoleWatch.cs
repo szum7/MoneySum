@@ -18,6 +18,8 @@ namespace ExcelWorkerApp.Utility
 
         public void StartAll()
         {
+            this.diffWatch.Reset();
+            this.stampWatch.Reset();
             this.diffWatch.Start();
             this.stampWatch.Start();
         }

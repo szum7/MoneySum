@@ -37,7 +37,7 @@ namespace ExcelWorkerApp
         public void ReadManyBankExportedFiles(string folderPath, string filePattern)
         {
             // @"C:\Users\Aron_Szocs\Documents\Bank", "*.xls"
-            this.bankExportedTransactions = excelReader.Read(folderPath, filePattern);
+            this.bankExportedTransactions = excelReader.ReadFiles(folderPath, filePattern);
         }
 
         public void TruncateBankExportedFiles()
@@ -62,7 +62,7 @@ namespace ExcelWorkerApp
         {
             mergedFileReader.IsReadFromTheBeginning = true;
             // @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls"
-            this.extendedMergedTransactions = this.mergedFileReader.Read(fullFilePath);
+            this.extendedMergedTransactions = this.mergedFileReader.ReadFile(fullFilePath);
             this.extendedMergedTransactions
                 .RemoveOmittedRows()
                 .ApplyTagsToTagGroups()

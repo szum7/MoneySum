@@ -17,26 +17,30 @@ namespace ExcelWorkerApp.Components.ReadExcel
     public class ExcelReader<T> where T : ExcelTransaction, new()
     {
         ConsoleWatch watch;
+        const string NAME = "ExcelReader";
 
         public bool IsReadFromTheBeginning { get; set; }
 
         public ExcelReader()
         {
-            this.watch = new ConsoleWatch(this.GetType().Name);
+            this.watch = new ConsoleWatch(NAME);
         }
 
-        public ExcelSheet<T> Read(string filePath)
+        public ExcelSheet<T> ReadFile(string filePath)
         {
-            this.watch.PrintTime($"STARTED.");
+            this.watch.StartAll();
+            this.watch.PrintTime($"Started reading.");
             var sheet = new ExcelSheet<T>();
             this.ReadExcel(filePath, sheet);
-            this.watch.PrintDiff($"Document read. DONE.");
+            this.watch.PrintTime($"Finished reading the document.\n");
+            this.watch.StopAll();
             return sheet;
         }
 
-        public ExcelSheet<T> Read(string folderPath, string filePattern)
+        public ExcelSheet<T> ReadFiles(string folderPath, string filePattern)
         {
-            this.watch.PrintTime($"STARTED.");
+            this.watch.StartAll();
+            this.watch.PrintTime($"Started reading.");
             var sheet = new ExcelSheet<T>();
             List<string> filePaths = this.InitFilePaths(folderPath, filePattern);
             this.watch.PrintDiff($"Paths read. File count: {filePaths.Count}");
@@ -46,10 +50,11 @@ namespace ExcelWorkerApp.Components.ReadExcel
             {
                 this.ReadExcel(path, sheet);
                 documentRead++;
-                this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead > 1 ? "" : "s")} read.");
+                this.watch.PrintDiff($"{documentRead}/{filePaths.Count} document{(documentRead == 1 ? "" : "s")} read.");
             }
 
-            this.watch.PrintDiff($"All documents read. DONE.\n");
+            this.watch.PrintTime($"Finished reading.\n");
+            this.watch.StopAll();
             return sheet;
         }
 
@@ -126,7 +131,7 @@ namespace ExcelWorkerApp.Components.ReadExcel
             }
         }
 
-        #region ReadExcel parts
+        #region ReadExcel utilities
 
         int GetStartingIndexValue(ISheet sheet)
         {
@@ -175,10 +180,12 @@ namespace ExcelWorkerApp.Components.ReadExcel
 
         public void TruncateData(ExcelSheet<T> excelSheet)
         {
-            this.watch.PrintTime($"STARTED {this.GetType().Name}");
+            this.watch.StartAll();
+            this.watch.PrintTime($"Started truncating.");
             int originalCount = excelSheet.Transactions.Count;
             int truncatedRowCount = excelSheet.Truncate();
-            this.watch.PrintDiff($"FINISHED. {originalCount} - {truncatedRowCount} = {excelSheet.Transactions.Count} row(s) remaining.\n");
+            this.watch.PrintDiff($"Finished truncating. {originalCount} - {truncatedRowCount} = {excelSheet.Transactions.Count} row{(excelSheet.Transactions.Count <= 1 ? "" : "s")} remaining.\n");
+            this.watch.StopAll();
         }
     }
 }

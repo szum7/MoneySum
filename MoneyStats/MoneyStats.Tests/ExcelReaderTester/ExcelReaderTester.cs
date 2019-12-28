@@ -37,7 +37,7 @@ namespace MoneyStats.Tests.ExcelReaderTesters
             reader.IsReadFromTheBeginning = true;
 
             var path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
-            var excelSheet = reader.Read($@"{path}\ExcelReaderTester\Files\ExelReaderTestFile.xlsx");
+            var excelSheet = reader.ReadFile($@"{path}\ExcelReaderTester\Files\ExelReaderTestFile.xlsx");
             excelSheet.RemoveOmittedRows().ApplyTagsToTagGroups().ApplyGroups();
             var str1 = JsonConvert.SerializeObject(excelSheet);
             var str2 = JsonConvert.SerializeObject(result);

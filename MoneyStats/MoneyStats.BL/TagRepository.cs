@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using MoneyStats.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using MoneyStats.BL.Utility;
 
 namespace MoneyStats.BL
 {
@@ -49,6 +50,17 @@ namespace MoneyStats.BL
                 context.Tag.AddRange(tags);
                 context.SaveChanges();
             }
+        }
+
+        public void GetAllTagDetailedSummary(int tagId, DateTime from, DateTime to)
+        {
+            var dates = Common.GetDatesList(from, to);
+            var transRepo = new TransactionRepository();
+            var transTagConnRepo = new TransactionTagConnRepository();
+            var tagRepo = new TagRepository();
+
+            // create year-month dictionary
+            // iterate transTagConnList and associate on date <-> year-month key
         }
 
         public void DeleteAll()

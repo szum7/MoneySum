@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq.Expressions;
 
 namespace MoneyStats.BL
 {
@@ -27,6 +28,25 @@ namespace MoneyStats.BL
                     })
                     .ToList();
                 return transactions;
+            }
+        }
+
+        public List<TransactionTagConn> GetOnFilter(Expression<Func<TransactionTagConn, bool>> predicate)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                return context.TransactionTagConn
+                    .Where(predicate)
+                    .Select(d => new TransactionTagConn()
+                    {
+                        Id = d.Id,
+                        TransactionId = d.TransactionId,
+                        TagId = d.TagId,
+                        Tag = d.Tag,
+                        Transaction = d.Transaction
+                    })
+                    .OrderBy(x => x.Transaction.AccountingDate)
+                    .ToList();
             }
         }
 

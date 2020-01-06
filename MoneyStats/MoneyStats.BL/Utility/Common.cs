@@ -9,9 +9,10 @@ namespace MoneyStats.BL.Utility
         // TODO test if from and to is in the array + test if all x.01
         public static List<DateTime> GetMonthsList(DateTime from, DateTime to)
         {
+            from = new DateTime(from.Year, from.Month, 1);            
             var months = new List<DateTime>();
 
-            for (var dt = from; dt <= to; dt = dt.AddMonths(1))
+            for (var dt = from; dt < to; dt = dt.AddMonths(1))
             {
                 months.Add(dt);
             }

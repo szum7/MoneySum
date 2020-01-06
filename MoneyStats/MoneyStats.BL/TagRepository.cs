@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using MoneyStats.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using MoneyStats.BL.Utility;
+using MoneyStats.BL.Model.TagRepository;
 
 namespace MoneyStats.BL
 {
@@ -52,54 +53,82 @@ namespace MoneyStats.BL
             }
         }
 
-        class TagMonthSummary
+        Dictionary<DateTime, MonthSummary> GetMonthsDictionary(List<DateTime> months)
         {
-            public DateTime Month { get; set; }
-            public string Title { get; set; }
-            public decimal Income { get; set; }
-            public decimal Expense { get; set; }
-            public decimal Flow { get { return Income - Math.Abs(Expense); } }
-            public List<Transaction> Transactions { get; set; }
+            var monthsDict = new Dictionary<DateTime, MonthSummary>();
+            foreach (var month in months)
+            {
+                monthsDict.Add(month, new MonthSummary()
+                {
+                    Month = month,
+                    TagInstances = new List<TagInstance>(),
+                    Tags = new List<TagMonthSummaryLine>()
+                });
+            }
+            return monthsDict;
         }
 
-        public void GetAllTagDetailedSummary(int tagId, DateTime from, DateTime to)
+        DateTime AdjustFromDate(List<TransactionTagConn> transactionTagConns, DateTime from)
         {
-            var months = Common.GetMonthsList(from, to);
-            var monthsDict = new Dictionary<DateTime, TagMonthSummary>();
-            var transRepo = new TransactionRepository();
+            return new DateTime(Math.Max(transactionTagConns.First().Transaction.AccountingDate.Ticks, from.Ticks));
+        }
+
+        DateTime AdjustToDate(List<TransactionTagConn> transactionTagConns, DateTime to)
+        {
+            return new DateTime(Math.Min(transactionTagConns.Last().Transaction.AccountingDate.Ticks, to.Ticks));
+        }
+
+        public Dictionary<DateTime, MonthSummary> GetAllTagDetailedSummary(DateTime from, DateTime to)
+        {
             var transTagConnRepo = new TransactionTagConnRepository();
-            var tagRepo = new TagRepository();
+            var transactionTagConns = transTagConnRepo.GetOnFilter(ttc => ttc.Transaction != null && ttc.Transaction.AccountingDate >= from && ttc.Transaction.AccountingDate <= to);
+            //transactionTagConns.OrderByDescending(ttc => ttc.Transaction.AccountingDate);
 
-            var ttcs = transTagConnRepo.GetWithEntities();
-
-            foreach (var ttc in ttcs)
+            if (transactionTagConns.Count == 0)
             {
-                var current = ttc.Transaction;
-                var currentMonth = new DateTime(current.AccountingDate.Year, current.AccountingDate.Month, 1);
+                return null;
+            }
+
+            from = this.AdjustFromDate(transactionTagConns, from);
+            to = this.AdjustToDate(transactionTagConns, to);
+
+            var months = Common.GetMonthsList(from, to);
+            var monthsDict = this.GetMonthsDictionary(months);
+
+            foreach (var transactionTagConn in transactionTagConns)
+            {
+                var currentTransaction = transactionTagConn.Transaction;
+                var currentMonth = new DateTime(currentTransaction.AccountingDate.Year, currentTransaction.AccountingDate.Month, 1);
+
                 if (!monthsDict.ContainsKey(currentMonth))
                 {
-                    monthsDict.Add(currentMonth, new TagMonthSummary()
+                    // Transaction is out of the given date range!
+                    continue;
+                }
+
+                var monthDictRow = monthsDict[currentMonth];
+                var tag = monthDictRow.Tags.SingleOrDefault(tag => tag.Title == transactionTagConn.Tag.Title);
+
+                if (tag == null)
+                {
+                    monthDictRow.Tags.Add(new TagMonthSummaryLine()
                     {
                         Month = currentMonth,
-                        Title = ttc.Tag.Title,
-                        Income = (current.Sum > 0 ? current.Sum.Value : 0),
-                        Expense = (current.Sum < 0 ? current.Sum.Value : 0),
-                        Transactions = new List<Transaction>() { current }
+                        Title = transactionTagConn.Tag.Title,
+                        Income = (currentTransaction.Sum > 0 ? currentTransaction.Sum.Value : 0),
+                        Expense = (currentTransaction.Sum < 0 ? currentTransaction.Sum.Value : 0),
+                        Transactions = new List<Transaction>() { currentTransaction }
                     });
-                } 
+                }
                 else
                 {
-                    var monthDictRow = monthsDict[currentMonth];
-                    monthDictRow.Income += (current.Sum > 0 ? current.Sum.Value : 0);
-                    monthDictRow.Expense += (current.Sum < 0 ? current.Sum.Value : 0);
-                    monthDictRow.Transactions.Add(current);
-                    // TODO ROSSZ!!! nem 1 tag van hónaponként! kijjebb vinni a dátumot!
+                    tag.Income += (currentTransaction.Sum > 0 ? currentTransaction.Sum.Value : 0);
+                    tag.Expense += (currentTransaction.Sum < 0 ? currentTransaction.Sum.Value : 0);
+                    tag.Transactions.Add(currentTransaction);
                 }
             }
 
-            // create year-month dictionary
-            // iterate transTagConnList and associate on date <-> year-month key
-            // orderby date
+            return monthsDict;
         }
 
         public void DeleteAll()

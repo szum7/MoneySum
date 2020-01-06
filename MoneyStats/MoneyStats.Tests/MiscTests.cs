@@ -26,5 +26,18 @@ namespace MoneyStats.Tests.ExcelReaderTesters
                 Assert.IsNotNull(entities[0].Transaction);
             }
         }
+
+        [TestMethod]
+        public void Test_TagRepository_GetAllTagDetailedSummary()
+        {
+            // Arrange
+            var repo = new TagRepository();
+
+            // Act
+            var details = repo.GetAllTagDetailedSummary(new System.DateTime(1999, 1, 1), System.DateTime.Now);
+
+            // Assert
+            Assert.IsNotNull(details); // Not really a test, only for debug
+        }
     }
 }

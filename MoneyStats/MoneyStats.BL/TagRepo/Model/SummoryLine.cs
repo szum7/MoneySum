@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MoneyStats.BL.Model.TagRepository
+namespace MoneyStats.BL.TagRepo.Model
 {
     public abstract class SummoryLine
     {

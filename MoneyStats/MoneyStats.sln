@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.WebApp", "MoneyS
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MoneyStats.Database", "MoneyStats.Database\MoneyStats.Database.sqlproj", "{17ADB8C7-4AF7-406F-9D49-5A6F73300BEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyStats.ConsoleApp", "MoneyStats.ConsoleApp\MoneyStats.ConsoleApp.csproj", "{805EB929-72F5-40FB-BAFF-5E7273F5A44A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{17ADB8C7-4AF7-406F-9D49-5A6F73300BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17ADB8C7-4AF7-406F-9D49-5A6F73300BEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17ADB8C7-4AF7-406F-9D49-5A6F73300BEC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{805EB929-72F5-40FB-BAFF-5E7273F5A44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{805EB929-72F5-40FB-BAFF-5E7273F5A44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{805EB929-72F5-40FB-BAFF-5E7273F5A44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{805EB929-72F5-40FB-BAFF-5E7273F5A44A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

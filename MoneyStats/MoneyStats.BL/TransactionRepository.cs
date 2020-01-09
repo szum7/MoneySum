@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MoneyStats.BL.Model;
 using Microsoft.EntityFrameworkCore;
+using MoneyStats.BL.TagRepo;
 
 namespace MoneyStats.BL
 {
@@ -74,6 +75,11 @@ namespace MoneyStats.BL
             }
         }
 
+        string GetTransactionLiteral(Transaction tr)
+        {
+            return $"{(tr.Sum > 0 ? " " : "")}{tr.Sum}, {tr.AccountingDate.ToShortDateString()}, {tr.PartnerName}";
+        }
+
         public TransactionStat GetTransactionStats()
         {
             // TODO test this
@@ -85,7 +91,7 @@ namespace MoneyStats.BL
             DateTime? currentDate = null;
             foreach (var transaction in transactions)
             {
-                if (!currentDate.HasValue || currentDate.Value.Month != transaction.AccountingDate.Month)
+                if (!currentDate.HasValue || currentDate.Value.Month != transaction.AccountingDate.Month) // new date
                 {
                     currentDate = transaction.AccountingDate;
 
@@ -93,10 +99,12 @@ namespace MoneyStats.BL
                     {
                         Date = new DateTime(currentDate.Value.Year, currentDate.Value.Month, 1),
                         Expense = (transaction.Sum < 0 ? transaction.Sum.Value : 0),
-                        Income = (transaction.Sum > 0 ? transaction.Sum.Value : 0)
+                        Income = (transaction.Sum > 0 ? transaction.Sum.Value : 0),
+                        Transactions = new List<Transaction>() { transaction },
+                        TransactionLiterals = new List<string>() { this.GetTransactionLiteral(transaction) },
                     });
                 }
-                else
+                else // not new date
                 {
                     var lastStat = transactionStat.MonthStats.Last();
                     if (transaction.Sum < 0)
@@ -106,7 +114,9 @@ namespace MoneyStats.BL
                     else if (transaction.Sum > 0)
                     {
                         lastStat.Income += transaction.Sum;
-                    }                    
+                    }
+                    lastStat.Transactions.Add(transaction);
+                    lastStat.TransactionLiterals.Add(this.GetTransactionLiteral(transaction));
                 }
             }
 

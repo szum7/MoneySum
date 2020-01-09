@@ -1,4 +1,4 @@
-﻿namespace MoneyStats.BL.Model.TagRepository
+﻿namespace MoneyStats.BL.TagRepo.Model
 {
     public class TagMonthSummaryLine : SummoryLine
     {

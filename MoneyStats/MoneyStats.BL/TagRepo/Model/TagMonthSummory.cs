@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MoneyStats.BL.Model.TagRepository
+namespace MoneyStats.BL.TagRepo.Model
 {
-    public class MonthSummary
+    public class TagMonthSummary
     {
         public DateTime Month { get; set; }
         public List<TagMonthSummaryLine> Tags { get; set; }

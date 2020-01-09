@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MoneyStats.DAL.Models;
+using System;
+using System.Collections.Generic;
 
 namespace MoneyStats.BL.Model
 {
@@ -16,5 +18,7 @@ namespace MoneyStats.BL.Model
                 return Income.Value - Math.Abs(Expense.Value);
             }
         }
+        public List<Transaction> Transactions { get; set; }
+        public List<string> TransactionLiterals { get; set; }
     }
 }

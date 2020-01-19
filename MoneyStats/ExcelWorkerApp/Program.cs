@@ -20,15 +20,85 @@ namespace ExcelWorkerApp
             }
         }
 
+        static void ChangeMergedFileNameProgram(string defaultName, out string mergedFileName)
+        {
+            Console.Write("Write the new name of the merged file: ");
+            var command = Console.ReadLine();
+
+            switch (command.Trim())
+            {
+                case "":
+                    mergedFileName = defaultName;
+                    break;
+                case "default":
+                    mergedFileName = defaultName;
+                    break;
+                default:
+                    mergedFileName = command;
+                    break;
+            }
+            Console.WriteLine("Merged filename changed to: " + mergedFileName);
+        }
+
+        static void ChangeMergedFilePathProgram(string defaultName, out string bankFilesPath)
+        {
+            Console.Write("Write the new name of the bankFilesPath: ");
+            var command = Console.ReadLine();
+
+            switch (command.Trim())
+            {
+                case "":
+                    bankFilesPath = defaultName;
+                    break;
+                case "default":
+                    bankFilesPath = defaultName;
+                    break;
+                default:
+                    bankFilesPath = command;
+                    break;
+            }
+            Console.WriteLine("BankFilesPath changed to: " + bankFilesPath);
+        }
+
+        static void ChangeBankFilesPathProgram(string defaultName, out string mergedFilePath)
+        {
+            Console.Write("Write the new name of the mergedFilePath: ");
+            var command = Console.ReadLine();
+
+            switch (command.Trim())
+            {
+                case "":
+                    mergedFilePath = defaultName;
+                    break;
+                case "default":
+                    mergedFilePath = defaultName;
+                    break;
+                default:
+                    mergedFilePath = command;
+                    break;
+            }
+            Console.WriteLine("MergedFilePath changed to: " + mergedFilePath);
+        }
+
         static void Main(string[] args)
         {
             var run = new ProgramRunner();
             var now = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            var nowString = "2019-11-03-8-52-36";
-            const string bankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank";
-            const string mergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\Merged_";
+            var staticNow = "2019-11-03-8-52-36";
+            var mergedFileName = $"Merged_{now}";
+            const string orignalBankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank";
+            var bankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank";
+            const string orignalMergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\";
+            var mergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\";
 
-            Console.WriteLine("" +
+            var programInfo = "" +
+                "Commands are listed below in brackets []. For example: [2] -> type the number 2 and hit enter to run that program.\n\n" + 
+                "[merged] Update the name (without extension) of the merged file for this run. Default is {Merged_" + now + "}\n" +
+                "[bankFilesPath] Update the path of the bank files for this run. Default is {" + bankFilesPath + "}\n" +
+                "[mergedFilePath] Update the path of the bank files for this run. Default is {" + mergedFilePath + "}\n" +
+                "[!] Show program instructions. (Useful if console got scrolled away.)\n" +
+                "[?] Get the list of local variables.\n\n" +
+
                 "[1] CREATE MERGED FILE:\n" +
                 "1. Read bank files.\n" +
                 "2. Create new merged file.\n\n" +
@@ -38,7 +108,7 @@ namespace ExcelWorkerApp
                 "5. Clear database. \n" +
                 "6. Write to database.\n\n" +
 
-                "[3] CLEAR AND REBUILD:\n" +
+                "[3] CLEAR, CREATE AND REBUILD:\n" +
                 "1. Read bank files.\n" +
                 "2. Create new merged file.\n" +
                 "3. Await user to edit the merged file.\n" +
@@ -48,48 +118,74 @@ namespace ExcelWorkerApp
 
                 "[4] ADD TO DATABASE: (unavailable)\n" +
                 "1. Read bank files.\n" +
-                "2. Add not-yet-existing transactions to a new merged file.\n" +
-                "3. Await user to edit the merged file.\n" +
-                "4. Add transactions from the merged file to the database.\n\n" +
+                "2. Merge read rows with the last merged file. (Last merged file rows unchanged.)\n\n" +
 
-                "[exit] EXIT PROGRAM");
+                "[exit] EXIT PROGRAM";
+
+            Console.WriteLine(programInfo);
 
             commandReading:
+            Console.Write("Awaiting command: ");
             string command = Console.ReadLine();
             switch (command.ToLower())
             {
+                #region case: Info programs
+                case "merged":
+                    ChangeMergedFileNameProgram($"Merged_{now}", out mergedFileName);
+                    goto commandReading;
+                case "bankFilesPath":
+                    ChangeBankFilesPathProgram(orignalBankFilesPath, out bankFilesPath);
+                    goto commandReading;
+                case "mergedFilePath":
+                    ChangeMergedFilePathProgram(orignalMergedFilePath, out mergedFilePath);
+                    goto commandReading;
+                case "?":
+                    Console.WriteLine($"merged = {mergedFileName}");
+                    Console.WriteLine($"bankFilesPath = {bankFilesPath}");
+                    Console.WriteLine($"mergedFilePath = {mergedFilePath}");
+                    goto commandReading;
+                case "!":
+                    Console.WriteLine(programInfo);
+                    goto commandReading;
+                #endregion
+
+                #region case: Programs
                 case "1":
                     run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
                     run.TruncateBankExportedFiles();
-                    run.CreateMergedExcelFile($"{mergedFilePath}{now}.xls"); 
+                    run.CreateMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls"); 
                     break;
                 case "2":                    
-                    run.ReadExtendedTransactionsMergedFile($"{mergedFilePath}{now}.xls");
+                    run.ReadExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
                     run.ClearTransactionRelatedDataFromDatabase();
                     run.SaveBankExportedTransactions();
                     break;
                 case "3":
                     run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
                     run.TruncateBankExportedFiles();
-                    run.CreateMergedExcelFile($"{mergedFilePath}{now}.xls");
+                    run.CreateMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls");
                     AwaitToEditMergedFileProgram("" +
                         "[Done] 1. Bank files read.\n" +
                         "[Done] 2. Merged file created.\n" +
                         "3. Awaiting user to edit the merged file.\n" +
                         "Edit the merged file and type OK to progress. Or type EXIT to exit.");
-                    run.ReadExtendedTransactionsMergedFile($"{mergedFilePath}{now}.xls");
+                    run.ReadExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
                     run.ClearTransactionRelatedDataFromDatabase();
                     run.SaveBankExportedTransactions();
                     break;
                 case "4":
                     Console.WriteLine("Not yet implemented!");
                     break;
+                #endregion
+
+                #region case: Instruction programs
                 case "exit":
                     Console.WriteLine("Program was exited.");
                     break;
                 default:
                     Console.WriteLine("Command not supported!");
                     goto commandReading;
+                #endregion
             }
 
 

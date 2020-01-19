@@ -3,13 +3,12 @@ using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ExcelWorkerApp.Components.MergeTransaction
 {
     class TransactionMerger
     {
-        int newTagId = -1;
+        int newTagId = -1;        
 
         public List<Transaction> Run(List<Transaction> tr1, List<ExcelTransactionExtended> tr2)
         {

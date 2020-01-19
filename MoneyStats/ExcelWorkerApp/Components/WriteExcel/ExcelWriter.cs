@@ -25,6 +25,70 @@ namespace ExcelWorkerApp.Components.WriteExcel
             this.watch = new ConsoleWatch(NAME);
         }
 
+        public void Run(ExcelSheet<ExcelTransactionExtended> excelData, string filePath, bool isCreateExtendedHeader = true)
+        {
+            this.watch.StartAll();
+            this.watch.PrintTime($"Started writing to excel.");
+
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                IWorkbook workbook;
+                if (Path.GetExtension(filePath) == ".xlsx")
+                {
+                    workbook = new XSSFWorkbook();
+                }
+                else
+                {
+                    workbook = HSSFWorkbook.Create(InternalWorkbook.CreateWorkbook());
+                }
+                this.watch.PrintDiff($"File created.");
+
+                ISheet sheet = workbook.CreateSheet("Könyvelt tételek");
+
+                this.CreateHeader(sheet, excelData.Header, isCreateExtendedHeader);
+
+                IDataFormat newDataFormat = workbook.CreateDataFormat();
+                ICellStyle dateStyle = workbook.CreateCellStyle();
+                dateStyle.DataFormat = newDataFormat.GetFormat("yyyy.MM.dd");
+
+                ICellStyle numberStyle = workbook.CreateCellStyle();
+                numberStyle.DataFormat = newDataFormat.GetFormat("0.00");
+
+                int rowIndex = 1;
+                foreach (var item in excelData.Transactions)
+                {
+                    IRow row = sheet.CreateRow(rowIndex);
+
+                    var dateCell = this.CreateStyledCell(row, 0, dateStyle);
+                    var numberCell = this.CreateStyledCell(row, 7, numberStyle);
+
+                    dateCell.SetCellValue(item.AccountingDate);
+                    row.CreateCell(1).SetCellValue(item.TransactionId);
+                    row.CreateCell(2).SetCellValue(item.Type);
+                    row.CreateCell(3).SetCellValue(item.Account);
+                    row.CreateCell(4).SetCellValue(item.AccountName);
+                    row.CreateCell(5).SetCellValue(item.PartnerAccount);
+                    row.CreateCell(6).SetCellValue(item.PartnerName);
+                    numberCell.SetCellValue(item.Sum);
+                    row.CreateCell(8).SetCellValue(item.Currency);
+                    row.CreateCell(9).SetCellValue(item.Message);
+
+                    row.CreateCell(10).SetCellValue(item.IsOmitted ? "1" : "");
+                    row.CreateCell(11).SetCellValue(item.GroupId);
+                    row.CreateCell(12).SetCellValue(string.Join(",", item.TagNames));
+                    row.CreateCell(13).SetCellValue(item.TagGroupId);
+
+                    this.watch.PrintDiff($"{rowIndex}/{excelData.Transactions.Count} line{(rowIndex == 1 ? "" : "s")} created.");
+                    rowIndex++;
+                }
+
+                workbook.Write(fs);
+                this.watch.PrintDiff($"File saved.");
+            }
+            this.watch.PrintTime($"Finished writing the excel file.\n");
+            this.watch.StopAll();
+        }
+
         public void Run(ExcelSheet<ExcelTransaction> excelData, string filePath, bool isCreateExtendedHeader = true)
         {
             this.watch.StartAll();

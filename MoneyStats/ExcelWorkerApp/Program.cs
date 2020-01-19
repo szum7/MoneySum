@@ -1,5 +1,8 @@
 ﻿using MoneyStats.BL;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ExcelWorkerApp
 {
@@ -116,9 +119,14 @@ namespace ExcelWorkerApp
                 "5. Clear database. \n" +
                 "6. Write to database.\n\n" +
 
-                "[4] ADD TO DATABASE: (unavailable)\n" +
+                "[4] ADD TO MERGED:\n" +
                 "1. Read bank files.\n" +
                 "2. Merge read rows with the last merged file. (Last merged file rows unchanged.)\n\n" +
+
+                "[5] ADD TO DATABASE: (unavailable)\n" +
+                "1. Read bank files.\n" +
+                "2. Merge read rows with rows from the database.\n" +
+                "3. Create merged file.\n\n" +
 
                 "[exit] EXIT PROGRAM";
 
@@ -156,7 +164,7 @@ namespace ExcelWorkerApp
                     run.CreateMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls"); 
                     break;
                 case "2":                    
-                    run.ReadExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
+                    run.ReadAndHandleExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
                     run.ClearTransactionRelatedDataFromDatabase();
                     run.SaveBankExportedTransactions();
                     break;
@@ -169,11 +177,23 @@ namespace ExcelWorkerApp
                         "[Done] 2. Merged file created.\n" +
                         "3. Awaiting user to edit the merged file.\n" +
                         "Edit the merged file and type OK to progress. Or type EXIT to exit.");
-                    run.ReadExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
+                    run.ReadAndHandleExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
                     run.ClearTransactionRelatedDataFromDatabase();
                     run.SaveBankExportedTransactions();
                     break;
                 case "4":
+                    // TODO!! Ebben a programban a contentId összehasonlításnál nem szabad figyelembe venni a kiegészített sorokat! (Az "IsOmitted", "Tag names", stb. oszlopokat!)
+                    run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
+                    run.TruncateBankExportedFiles();
+                    // read last merged file
+                    run.ReadLastExtendedTransactionsMergedFile(mergedFilePath);
+                    // merge last merged file's content (extendedExcel) with newly read rows (excel)
+                    run.MergeLastExtendedTransactionsWithNewlyReadOnes();
+                    // create new file
+                    run.CreateExtendedMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls");
+                    break;
+                case "5":
+                    // Might be too complicated. I can't really create excel rows from db rows -> tagGroupId would not make sense!
                     Console.WriteLine("Not yet implemented!");
                     break;
                 #endregion

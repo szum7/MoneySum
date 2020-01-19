@@ -4,8 +4,10 @@ using ExcelWorkerApp.Components.WriteExcel;
 using ExcelWorkerApp.Model;
 using MoneyStats.BL;
 using MoneyStats.DAL.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ExcelWorkerApp
@@ -57,10 +59,36 @@ namespace ExcelWorkerApp
             this.excelWriter.Run(this.bankExportedTransactions, fullFilePath);
         }
 
-        public void ReadExtendedTransactionsMergedFile(string fullFilePath)
+        public void CreateExtendedMergedExcelFile(string fullFilePath)
         {
-            mergedFileReader.IsReadFromTheBeginning = true;
-            // @"C:\Users\Aron_Szocs\Documents\Bank\Merged\Merged.xls"
+            if (this.extendedMergedTransactions == null ||
+                this.extendedMergedTransactions.Transactions.Count == 0)
+            {
+                Console.WriteLine("[ALERT] Transactions are empty!");
+                return;
+            }
+            this.excelWriter.Run(this.extendedMergedTransactions, fullFilePath);
+        }
+
+        public void ReadLastExtendedTransactionsMergedFile(string mergedFilesPath)
+        {
+            List<string> filePaths = Directory.GetFiles(mergedFilesPath, "*.xls").ToList();
+            filePaths.Sort();
+            this.mergedFileReader.IsReadFromTheBeginning = true;
+            this.extendedMergedTransactions = this.mergedFileReader.ReadFile(filePaths.Last());
+        }
+
+        public void MergeLastExtendedTransactionsWithNewlyReadOnes()
+        {
+            //var castList = this.bankExportedTransactions.Transactions.Cast<ExcelTransactionExtended>().ToList();
+            var serializedParent = JsonConvert.SerializeObject(this.bankExportedTransactions.Transactions);
+            var castList = JsonConvert.DeserializeObject<List<ExcelTransactionExtended>>(serializedParent);
+            this.extendedMergedTransactions.MergeWith(castList);
+        }
+
+        public void ReadAndHandleExtendedTransactionsMergedFile(string fullFilePath)
+        {
+            this.mergedFileReader.IsReadFromTheBeginning = true;
             this.extendedMergedTransactions = this.mergedFileReader.ReadFile(fullFilePath);
             this.extendedMergedTransactions
                 .RemoveOmittedRows()

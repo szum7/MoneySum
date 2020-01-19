@@ -1,4 +1,62 @@
-﻿
+﻿public List<ExcelTransactionExtended> Run(List<ExcelTransaction> tr1, List<ExcelTransactionExtended> tr2)
+        {
+            tr1 = tr1.OrderBy(x => x.AccountingDate).ToList();
+            tr2 = tr2.OrderBy(x => x.AccountingDate).ToList();
+
+            List<ExcelTransactionExtended> merged = new List<ExcelTransactionExtended>();
+            int i = 0, j = 0;
+            while (i < tr1.Count && j < tr2.Count)
+            {
+                if (tr1[i].AccountingDate < tr2[j].AccountingDate)
+                {
+                    merged.Add((ExcelTransactionExtended)tr1[i]);
+                    i++;
+                }
+                else if (tr1[i].AccountingDate > tr2[j].AccountingDate)
+                {
+                    merged.Add(tr2[j]);
+                    j++;
+                }
+                else
+                {
+                    var interval = new List<ExcelTransactionExtended>();
+                    var date = tr1[i].AccountingDate;
+                    while (i < tr1.Count && tr1[i].AccountingDate == date)
+                    {
+                        if (!interval.Any(x => x.ContentId == tr1[i].ContentId))
+                        {
+                            interval.Add((ExcelTransactionExtended)tr1[i]);
+                        }
+                        i++;
+                    }
+                    while (j < tr2.Count && date == tr2[j].AccountingDate)
+                    {
+                        if (!interval.Any(x => x.ContentId == tr2[j].ContentId))
+                        {
+                            interval.Add(tr2[j]);
+                        }
+                        j++;
+                    }
+                    merged.AddRange(interval);
+                }
+            }
+            while (i < tr1.Count)
+            {
+                merged.Add((ExcelTransactionExtended)tr1[i]);
+                i++;
+            }
+            while (j < tr2.Count)
+            {
+                merged.Add(tr2[j]);
+                j++;
+            }
+
+            return merged;
+        }
+
+
+
+
 
         public static List<DateTime> GetDatesList(DateTime from, DateTime to)
         {

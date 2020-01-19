@@ -166,5 +166,61 @@ namespace ExcelWorkerApp.Model
             this.Transactions = tmp as List<T>;
             return this;
         }
+
+        public void MergeWith(List<T> tr2)
+        {
+            this.Transactions = this.Transactions.OrderBy(x => x.AccountingDate).ToList();
+            tr2 = tr2.OrderBy(x => x.AccountingDate).ToList();
+
+            List<T> merged = new List<T>();
+            int i = 0, j = 0;
+            while (i < this.Transactions.Count && j < tr2.Count)
+            {
+                if (this.Transactions[i].AccountingDate < tr2[j].AccountingDate)
+                {
+                    merged.Add(this.Transactions[i]);
+                    i++;
+                }
+                else if (this.Transactions[i].AccountingDate > tr2[j].AccountingDate)
+                {
+                    merged.Add(tr2[j]);
+                    j++;
+                }
+                else
+                {
+                    var interval = new List<T>();
+                    var date = this.Transactions[i].AccountingDate;
+                    while (i < this.Transactions.Count && this.Transactions[i].AccountingDate == date)
+                    {
+                        if (!interval.Any(x => x.ContentId == this.Transactions[i].ContentId))
+                        {
+                            interval.Add(this.Transactions[i]);
+                        }
+                        i++;
+                    }
+                    while (j < tr2.Count && date == tr2[j].AccountingDate)
+                    {
+                        if (!interval.Any(x => x.ContentId == tr2[j].ContentId))
+                        {
+                            interval.Add(tr2[j]);
+                        }
+                        j++;
+                    }
+                    merged.AddRange(interval);
+                }
+            }
+            while (i < this.Transactions.Count)
+            {
+                merged.Add(this.Transactions[i]);
+                i++;
+            }
+            while (j < tr2.Count)
+            {
+                merged.Add(tr2[j]);
+                j++;
+            }
+
+            this.Transactions = merged;
+        }
     }
 }

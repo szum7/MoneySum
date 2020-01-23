@@ -1,4 +1,5 @@
-﻿using ExcelWorkerApp.Components.ReadExcel;
+﻿using ExcelWorkerApp;
+using ExcelWorkerApp.Components.ReadExcel;
 using ExcelWorkerApp.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -44,6 +45,27 @@ namespace MoneyStats.Tests.ExcelReaderTesters
 
             // Assert
             Assert.AreEqual(str1, str2);
+        }
+
+        [TestMethod]
+        public void TestMergeWithProgram()
+        {
+            // Arrange
+            var run = new ProgramRunner();
+            var bankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\TestMergeWithProgram";
+            var mergedFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\TestMergeWithProgram\Merged\";
+            var mergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\TestMergeWithProgram\Merged\TestResults\";
+            var mergedFileName = $"Test_Merged_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}";
+
+            // Act
+            run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
+            run.TruncateBankExportedFiles();
+            run.ReadLastExtendedTransactionsMergedFile(mergedFilesPath);
+            run.MergeLastExtendedTransactionsWithNewlyReadOnes();
+            run.CreateExtendedMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls");
+
+            // Assert
+            Assert.AreEqual(1, 1);
         }
     }
 }

@@ -80,7 +80,6 @@ namespace ExcelWorkerApp
 
         public void MergeLastExtendedTransactionsWithNewlyReadOnes()
         {
-            //var castList = this.bankExportedTransactions.Transactions.Cast<ExcelTransactionExtended>().ToList();
             var serializedParent = JsonConvert.SerializeObject(this.bankExportedTransactions.Transactions);
             var castList = JsonConvert.DeserializeObject<List<ExcelTransactionExtended>>(serializedParent);
             this.extendedMergedTransactions.MergeWith(castList);

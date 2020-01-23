@@ -188,11 +188,15 @@ namespace ExcelWorkerApp.Model
                 }
                 else
                 {
+                    // Dátum szerint rendezett, viszont nem rendezett contentId szerint. Vagyis 
+                    // előfordulhat, hogy az egyező sorok (ahol a contentId=) más helyeken vannak, 
+                    // és így hibásan belekerülnének a végeredménybe. Ezért mindig le kell 
+                    // vizsgálnunk (Any()) hogy már szerepel-e az adott contentId.
                     var interval = new List<T>();
                     var date = this.Transactions[i].AccountingDate;
                     while (i < this.Transactions.Count && this.Transactions[i].AccountingDate == date)
                     {
-                        if (!interval.Any(x => x.ContentId == this.Transactions[i].ContentId))
+                        if (!interval.Any(x => x.IsTheSame(this.Transactions[i])))
                         {
                             interval.Add(this.Transactions[i]);
                         }
@@ -200,7 +204,7 @@ namespace ExcelWorkerApp.Model
                     }
                     while (j < tr2.Count && date == tr2[j].AccountingDate)
                     {
-                        if (!interval.Any(x => x.ContentId == tr2[j].ContentId))
+                        if (!interval.Any(x => x.IsTheSame(tr2[j])))
                         {
                             interval.Add(tr2[j]);
                         }

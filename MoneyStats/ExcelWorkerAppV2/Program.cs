@@ -1,28 +1,14 @@
-﻿using MoneyStats.BL;
+﻿using ExcelWorkerApp.Model;
+using MoneyStats.BL;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ExcelWorkerApp
+namespace ExcelWorkerAppV2
 {
     class Program
     {
-        static void AwaitToEditMergedFileProgram(string outputText)
-        {
-            Console.WriteLine(outputText);
-            string input = "";
-            while (input.ToLower() != "ok")
-            {
-                input = Console.ReadLine();
-                if (input.ToLower() == "exit")
-                {
-                    Console.WriteLine("Program exited.");
-                    return;
-                }
-            }
-        }
-
         static void ChangeMergedFileNameProgram(string defaultName, out string mergedFileName)
         {
             Console.Write("Write the new name of the merged file: ");
@@ -85,17 +71,32 @@ namespace ExcelWorkerApp
 
         static void Main(string[] args)
         {
-            var run = new ProgramRunner();
+            /*
+             * 1. read bank files
+             * 2. create merged file
+             * 
+             * 1. read bank files
+             * 2. merge last merged file with new rows
+             * 3. create merged file
+             * 
+             * 1. clear database
+             * 
+             * 1. read merged file
+             * 2. merge read rows with database rows
+             * 
+             * 1. export database to merged file
+             */
+
             var now = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            var staticNow = "2019-11-03-8-52-36";
             var mergedFileName = $"Merged_{now}";
-            const string orignalBankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank";
             var bankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank";
-            const string orignalMergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\";
             var mergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\";
+            const string filePattern = "*.xls";
+            const string orignalBankFilesPath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank";
+            const string orignalMergedFilePath = @"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\";
 
             var programInfo = "" +
-                "Commands are listed below in brackets []. For example: [2] -> type the number 2 and hit enter to run that program.\n\n" + 
+                "Commands are listed below in brackets []. For example: [2] -> type the number 2 and hit enter to run that program.\n\n" +
                 "[merged] Update the name (without extension) of the merged file for this run. Default is {Merged_" + now + "}\n" +
                 "[bankFilesPath] Update the path of the bank files for this run. Default is {" + bankFilesPath + "}\n" +
                 "[mergedFilePath] Update the path of the bank files for this run. Default is {" + mergedFilePath + "}\n" +
@@ -132,6 +133,16 @@ namespace ExcelWorkerApp
 
             Console.WriteLine(programInfo);
 
+            ExcelReader reader = new ExcelReader();
+            ExcelWriter writer = new ExcelWriter();
+            TransactionConverter converter;
+            ExcelSheet inMemoryExcelSheet;
+
+            var transTagConnRepo = new TransactionTagConnRepository();
+            var transRepo = new TransactionRepository();
+            var tagRepo = new TagRepository();
+            var currencyRepo = new CurrencyRepository();
+
             commandReading:
             Console.Write("Awaiting command: ");
             string command = Console.ReadLine();
@@ -140,114 +151,103 @@ namespace ExcelWorkerApp
                 #region case: Info programs
                 case "merged":
                     ChangeMergedFileNameProgram($"Merged_{now}", out mergedFileName);
-                    goto commandReading;
+                    break;
                 case "bankFilesPath":
                     ChangeBankFilesPathProgram(orignalBankFilesPath, out bankFilesPath);
-                    goto commandReading;
+                    break;
                 case "mergedFilePath":
                     ChangeMergedFilePathProgram(orignalMergedFilePath, out mergedFilePath);
-                    goto commandReading;
+                    break;
                 case "?":
                     Console.WriteLine($"merged = {mergedFileName}");
                     Console.WriteLine($"bankFilesPath = {bankFilesPath}");
                     Console.WriteLine($"mergedFilePath = {mergedFilePath}");
-                    goto commandReading;
+                    break;
                 case "!":
                     Console.WriteLine(programInfo);
-                    goto commandReading;
+                    break;
                 #endregion
 
                 #region case: Programs
                 case "1":
-                    run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
-                    run.TruncateBankExportedFiles();
-                    run.CreateMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls"); 
+
+                    // 1. Read bank files
+                    reader.IsReadFromTheBeginning = false;
+                    inMemoryExcelSheet = reader.ReadFiles(bankFilesPath, filePattern);
+
+                    // Remove duplicate rows
+                    inMemoryExcelSheet.Truncate();
+
+                    // 2. Create new merged file
+                    writer.Run(inMemoryExcelSheet, $"{mergedFilePath}{mergedFileName}");
+
                     break;
-                case "2":                    
-                    run.ReadAndHandleExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
-                    run.ClearTransactionRelatedDataFromDatabase();
-                    run.SaveBankExportedTransactions();
+                case "2":
+
+                    // 1. Read bank files
+                    reader.IsReadFromTheBeginning = false;
+                    inMemoryExcelSheet = reader.ReadFiles(bankFilesPath, filePattern);
+
+                    // Remove duplicate rows
+                    inMemoryExcelSheet.Truncate();
+
+                    // 2. Read last merged file
+                    List<string> filePaths = Directory.GetFiles(mergedFilePath, filePattern).ToList();
+                    filePaths.Sort();
+                    reader.IsReadFromTheBeginning = true;
+                    ExcelSheet lastExcelSheet =  reader.ReadFile(filePaths.Last());
+
+                    // 3. Merge bank files and last merged file
+                    inMemoryExcelSheet.MergeWith(lastExcelSheet);
+
+                    // 4. Create merged file
+                    writer.Run(inMemoryExcelSheet, $"{mergedFilePath}{mergedFileName}");
+
                     break;
                 case "3":
-                    run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
-                    run.TruncateBankExportedFiles();
-                    run.CreateMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls");
-                    AwaitToEditMergedFileProgram("" +
-                        "[Done] 1. Bank files read.\n" +
-                        "[Done] 2. Merged file created.\n" +
-                        "3. Awaiting user to edit the merged file.\n" +
-                        "Edit the merged file and type OK to progress. Or type EXIT to exit.");
-                    run.ReadAndHandleExtendedTransactionsMergedFile($"{mergedFilePath}{mergedFileName}.xls");
-                    run.ClearTransactionRelatedDataFromDatabase();
-                    run.SaveBankExportedTransactions();
+
+                    // 1. Clear database
+                    transTagConnRepo.DeleteAll();
+                    transRepo.DeleteAll();
+                    tagRepo.DeleteAll();
+                    currencyRepo.DeleteAll();
+
                     break;
                 case "4":
-                    run.ReadManyBankExportedFiles(bankFilesPath, "*.xls");
-                    run.TruncateBankExportedFiles();
-                    // read last merged file
-                    run.ReadLastExtendedTransactionsMergedFile(mergedFilePath);
-                    // merge last merged file's content (extendedExcel) with newly read rows (excel)
-                    run.MergeLastExtendedTransactionsWithNewlyReadOnes();
-                    // create new file
-                    run.CreateExtendedMergedExcelFile($"{mergedFilePath}{mergedFileName}.xls");
+                    // Import merged file to database
+
+                    // 1. Read merged file
+                    inMemoryExcelSheet = reader.ReadFile($"{mergedFilePath}{mergedFileName}");
+
+                    // 2. Convert to model
+                    converter = new TransactionConverter();
+                    var trModels = converter.ConvertToTransactionModel(inMemoryExcelSheet.Transactions);
+
+                    // 3. Save to database
+                    transRepo.SmartSave(trModels);
+
                     break;
                 case "5":
-                    // Might be too complicated. I can't really create excel rows from db rows -> tagGroupId would not make sense!
-                    Console.WriteLine("Not yet implemented!");
+                    // Merge merged file with database
+                    break;
+                case "6":
+                    // Export database to file
                     break;
                 #endregion
 
                 #region case: Instruction programs
                 case "exit":
                     Console.WriteLine("Program was exited.");
-                    break;
+                    goto programEnd;
                 default:
                     Console.WriteLine("Command not supported!");
-                    goto commandReading;
+                    break;
                 #endregion
             }
+            goto commandReading;
 
-
-            #region Test section
-#if false
-            var list = (new TransactionRepository()).Get();
-            return;
-#endif
-            #endregion
-
-
-#if false
-            run.ReadManyBankExportedFiles(@"C:\Users\Shy\Documents\Ego\AllDocs\bank", "*.xls");
-            run.TruncateBankExportedFiles();
-            run.CreateMergedExcelFile($@"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\Merged_{nowString}.xls");
-#endif
-
-            // => User edits the file
-#if false
-            Console.WriteLine("========================");
-            Console.WriteLine("USER INTERACTION NEEDED!");
-            Console.WriteLine("========================");
-            Console.WriteLine("You should edit the merged file now. Type 'OK' to read the merged file, or 'EXIT' to exit the program.");
-            string input = "";
-            while (input.ToLower() != "ok")
-            {
-                input = Console.ReadLine();
-                if (input.ToLower() == "exit")
-                {
-                    Console.WriteLine("Program exited.");
-                    return;
-                }
-            }
-#endif
-
-#if false
-            run.ReadExtendedTransactionsMergedFile($@"C:\Users\Shy\Documents\Ego\AllDocs\bank\Merged\Merged_{nowString}.xls");
-            run.LoadAlreadyExistingTransactionsFromDatabase();
-            run.MergeDatabaseAndExtendedMergedTransactions();
-            run.SaveNewBankExportedTransactions();
-#endif
-
-            Console.WriteLine("PROGRAM ENDED.");
+            programEnd:
+            Console.WriteLine("END OF APPLICATION.");
         }
     }
 }

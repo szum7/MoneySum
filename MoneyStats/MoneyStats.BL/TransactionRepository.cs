@@ -214,7 +214,7 @@ namespace MoneyStats.BL
                         ttcToBeSaved.Add(new TransactionTagConn()
                         {
                             TransactionId = transaction.Id,
-                            TagId = tagDict[tag.Title] // Should never fail throw keynotfound
+                            TagId = tagDict[tag.Title] // Should never fail/throw keynotfound
                         });
                     }
                 }
